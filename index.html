@@ -29,6 +29,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
 /* Buttons */
 .btn-primary{background:var(--primary);color:#fff;border:none;border-radius:var(--radius);padding:14px 24px;font-size:16px;font-weight:600;width:100%;cursor:pointer;transition:all .2s}
 .btn-primary:active{transform:scale(.98);background:var(--primary-dark)}
+.btn-primary.loading{opacity:.7;pointer-events:none}
 .btn-outline{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:12px 20px;font-size:15px;cursor:pointer;width:100%}
 .btn-outline:active{background:#f8f8f8}
 
@@ -256,7 +257,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
           <input class="input-field" type="password" placeholder="测试密码: 123456" value="123456">
         </div>
         <button class="auth-forgot" onclick="navigateTo('forgot')">忘记密码？</button>
-        <button class="btn-primary" style="margin-top:16px" onclick="handleLogin()">登 录</button>
+        <button class="btn-primary" style="margin-top:16px" onclick="handleLogin(this)">登 录</button>
       </div>
       <div id="login-code" style="display:none">
         <div class="input-group">
@@ -270,7 +271,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
             <button style="padding:14px 16px;border-radius:var(--radius);border:1px solid var(--primary);background:var(--card);color:var(--primary);font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap" onclick="sendCode(this)">获取验证码</button>
           </div>
         </div>
-        <button class="btn-primary" style="margin-top:8px" onclick="handleLogin()">登 录</button>
+        <button class="btn-primary" style="margin-top:8px" onclick="handleLogin(this)">登 录</button>
       </div>
       <div class="auth-footer">
         还没有账号？<a onclick="navigateTo('register')">立即注册</a>
@@ -307,7 +308,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
         <label class="input-label">确认密码</label>
         <input class="input-field" type="password" placeholder="再次输入密码">
       </div>
-      <button class="btn-primary" onclick="handleLogin()">注 册</button>
+      <button class="btn-primary" onclick="handleLogin(this)">注 册</button>
       <div class="auth-footer" style="margin-top:16px">
         已有账号？<a onclick="navigateTo('login')">返回登录</a>
       </div>
@@ -339,7 +340,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
         <label class="input-label">新密码</label>
         <input class="input-field" type="password" placeholder="6-20位字母或数字">
       </div>
-      <button class="btn-primary" onclick="handleLogin()">重置密码</button>
+      <button class="btn-primary" onclick="handleLogin(this)">重置密码</button>
       <div class="auth-footer" style="margin-top:16px">
         记起来了？<a onclick="navigateTo('login')">返回登录</a>
       </div>
@@ -604,7 +605,7 @@ let addType = 'income';
 let currentFilter = 'all';
 let currentMonth = new Date(2026, 4);
 let selectedCat = null;
-let pageStack = ['home'];
+let pageStack = ['login'];
 
 // ==================== ROUTING ====================
 function navigateTo(page) {
@@ -670,12 +671,20 @@ function sendCode(btn) {
   }, 1000);
 }
 
-function handleLogin() {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  pageStack = ['home'];
-  document.getElementById('page-home').classList.add('active');
-  updateTabBar('home');
-  renderHomeTx();
+function handleLogin(btn) {
+  // Visual feedback
+  if (btn) {
+    btn.textContent = '登录中...';
+    btn.classList.add('loading');
+  }
+  // Small delay so user sees the feedback
+  setTimeout(function() {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    pageStack = ['home'];
+    document.getElementById('page-home').classList.add('active');
+    updateTabBar('home');
+    renderHomeTx();
+  }, 300);
 }
 
 function handleLogout() {
@@ -722,27 +731,24 @@ function renderTxList() {
 
   let html = '';
   Object.entries(groups).forEach(([label, items]) => {
-    html += `<div class="date-header">${label}</div>`;
+    html += '<div class="date-header">' + label + '</div>';
     items.forEach(t => { html += renderTxItem(t); });
   });
   container.innerHTML = html || '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">暂无记录</div></div>';
 }
 
 function renderTxItem(t) {
-  return `<div class="tx-item" onclick="viewDetail(${t.id})">
-    <div class="tx-icon" style="background:${t.type==='income'?'#D1FAE5':'#FEF3C7'}">${t.icon}</div>
-    <div class="tx-info"><div class="tx-name">${t.name}</div><div class="tx-cat">${t.cat}</div></div>
-    <div class="tx-amount ${t.type}">${t.type==='income'?'+':'-'}¥${t.amount.toFixed(2)}</div>
-  </div>`;
+  return '<div class="tx-item" onclick="viewDetail(' + t.id + ')">' +
+    '<div class="tx-icon" style="background:' + (t.type==='income'?'#D1FAE5':'#FEF3C7') + '">' + t.icon + '</div>' +
+    '<div class="tx-info"><div class="tx-name">' + t.name + '</div><div class="tx-cat">' + t.cat + '</div></div>' +
+    '<div class="tx-amount ' + t.type + '">' + (t.type==='income'?'+':'-') + '¥' + t.amount.toFixed(2) + '</div></div>';
 }
 
 function formatDateGroup(dateStr) {
-  const d = new Date(dateStr);
-  const today = new Date(2026,4,14);
-  const yesterday = new Date(2026,4,13);
   if (dateStr === '2026-05-14') return '今天';
   if (dateStr === '2026-05-13') return '昨天';
-  return `${d.getMonth()+1}月${d.getDate()}日`;
+  const d = new Date(dateStr);
+  return (d.getMonth()+1) + '月' + d.getDate() + '日';
 }
 
 // ==================== ADD TRANSACTION ====================
@@ -757,12 +763,11 @@ function setAddType(type) {
 function renderCategories() {
   const grid = document.getElementById('category-grid');
   const cats = categories[addType] || [];
-  grid.innerHTML = cats.map(c => `
-    <button class="cat-item" data-cat="${c.name}" onclick="selectCat('${c.name}',this)">
-      <div class="cat-icon" style="background:${c.color}">${c.icon}</div>
-      <div class="cat-name">${c.name}</div>
-    </button>
-  `).join('');
+  grid.innerHTML = cats.map(function(c) {
+    return '<button class="cat-item" data-cat="' + c.name + '" onclick="selectCat(\'' + c.name + '\',this)">' +
+      '<div class="cat-icon" style="background:' + c.color + '">' + c.icon + '</div>' +
+      '<div class="cat-name">' + c.name + '</div></button>';
+  }).join('');
 }
 
 function selectCat(name, btn) {
@@ -778,7 +783,6 @@ function saveTransaction() {
     document.querySelectorAll('.cat-item')[0].style.background = '#D1FAE5';
     selectedCat = document.querySelector('.cat-item')?.dataset?.cat || '其他';
   }
-  // In real app would save - for demo just go back
   goBack();
 }
 
@@ -790,28 +794,27 @@ function viewDetail(id) {
 
 function renderDetail() {
   const id = window._detailId;
-  const tx = txData.find(t => t.id === id);
+  const tx = txData.find(function(t) { return t.id === id; });
   if (!tx) return;
   const container = document.getElementById('detail-content');
-  container.innerHTML = `
-    <div style="padding-top:8px"></div>
-    <div class="detail-card">
-      <div class="d-icon" style="background:${tx.type==='income'?'#D1FAE5':'#FEF3C7'}">${tx.icon}</div>
-      <div class="d-amount" style="color:${tx.type==='income'?'var(--income)':'var(--expense)'}">${tx.type==='income'?'+':'-'}¥${tx.amount.toFixed(2)}</div>
-      <div class="d-name">${tx.name}</div>
-      <div class="d-cat">${tx.cat}</div>
-    </div>
-    <div class="detail-info">
-      <div class="detail-row"><span class="label">类型</span><span class="value">${tx.type==='income'?'收入':'支出'}</span></div>
-      <div class="detail-row"><span class="label">分类</span><span class="value">${tx.cat}</span></div>
-      <div class="detail-row"><span class="label">日期</span><span class="value">${tx.date}</span></div>
-      <div class="detail-row"><span class="label">备注</span><span class="value">${tx.note || '无'}</span></div>
-    </div>
-    <div class="detail-actions">
-      <button class="btn-del" onclick="goBack()">删除</button>
-      <button class="btn-edit" onclick="goBack()">编辑</button>
-    </div>
-  `;
+  container.innerHTML = '' +
+    '<div style="padding-top:8px"></div>' +
+    '<div class="detail-card">' +
+      '<div class="d-icon" style="background:' + (tx.type==='income'?'#D1FAE5':'#FEF3C7') + '">' + tx.icon + '</div>' +
+      '<div class="d-amount" style="color:' + (tx.type==='income'?'var(--income)':'var(--expense)') + '">' + (tx.type==='income'?'+':'-') + '¥' + tx.amount.toFixed(2) + '</div>' +
+      '<div class="d-name">' + tx.name + '</div>' +
+      '<div class="d-cat">' + tx.cat + '</div>' +
+    '</div>' +
+    '<div class="detail-info">' +
+      '<div class="detail-row"><span class="label">类型</span><span class="value">' + (tx.type==='income'?'收入':'支出') + '</span></div>' +
+      '<div class="detail-row"><span class="label">分类</span><span class="value">' + tx.cat + '</span></div>' +
+      '<div class="detail-row"><span class="label">日期</span><span class="value">' + tx.date + '</span></div>' +
+      '<div class="detail-row"><span class="label">备注</span><span class="value">' + (tx.note || '无') + '</span></div>' +
+    '</div>' +
+    '<div class="detail-actions">' +
+      '<button class="btn-del" onclick="goBack()">删除</button>' +
+      '<button class="btn-edit" onclick="goBack()">编辑</button>' +
+    '</div>';
 }
 
 // ==================== STATISTICS ====================
@@ -824,42 +827,40 @@ function changeMonth(delta) {
 
 function renderStats() {
   const container = document.getElementById('stats-category-list');
-  const expenses = txData.filter(t => t.type === 'expense');
+  const expenses = txData.filter(function(t) { return t.type === 'expense'; });
   const catTotals = {};
-  expenses.forEach(t => {
+  expenses.forEach(function(t) {
     catTotals[t.cat] = (catTotals[t.cat] || 0) + t.amount;
   });
-  const sorted = Object.entries(catTotals).sort((a,b) => b[1] - a[1]);
+  const sorted = Object.entries(catTotals).sort(function(a,b) { return b[1] - a[1]; });
   const max = sorted.length ? sorted[0][1] : 1;
 
   const colors = ['#F59E0B','#3B82F6','#6366F1','#EC4899','#EF4444','#8B5CF6','#06B6D4','#84CC16'];
   const icons = ['🍕','🛒','🚗','🎮','👕','🏠','🏥','📚'];
 
-  container.innerHTML = sorted.map(([cat, total], i) => `
-    <div class="stat-bar-item">
-      <div class="sbi-icon" style="background:${colors[i%colors.length]}22;color:${colors[i%colors.length]}">${icons[i%icons.length]}</div>
-      <div class="sbi-info">
-        <div class="sbi-name">${cat}</div>
-        <div class="sbi-bar-wrap" style="background:${colors[i%colors.length]}22">
-          <div class="sbi-bar" style="width:${(total/max*100).toFixed(0)}%;background:${colors[i%colors.length]}"></div>
-        </div>
-      </div>
-      <div class="sbi-amount">¥${total.toFixed(2)}</div>
-    </div>
-  `).join('');
+  container.innerHTML = sorted.map(function(item, i) {
+    var cat = item[0], total = item[1];
+    return '<div class="stat-bar-item">' +
+      '<div class="sbi-icon" style="background:' + colors[i%colors.length] + '22;color:' + colors[i%colors.length] + '">' + icons[i%icons.length] + '</div>' +
+      '<div class="sbi-info">' +
+        '<div class="sbi-name">' + cat + '</div>' +
+        '<div class="sbi-bar-wrap" style="background:' + colors[i%colors.length] + '22">' +
+          '<div class="sbi-bar" style="width:' + (total/max*100).toFixed(0) + '%;background:' + colors[i%colors.length] + '"></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="sbi-amount">¥' + total.toFixed(2) + '</div></div>';
+  }).join('');
 }
 
 // ==================== CATEGORY EDIT ====================
 function renderCategoryEdit() {
   const container = document.getElementById('category-edit-list');
-  const cats = categories.expense;
-  container.innerHTML = cats.map(c => `
-    <div class="cat-edit-item">
-      <div class="cei-icon" style="background:${c.color}">${c.icon}</div>
-      <div class="cei-name">${c.name}</div>
-      <button class="cei-del" onclick="this.parentElement.remove()">✕</button>
-    </div>
-  `).join('');
+  container.innerHTML = categories.expense.map(function(c) {
+    return '<div class="cat-edit-item">' +
+      '<div class="cei-icon" style="background:' + c.color + '">' + c.icon + '</div>' +
+      '<div class="cei-name">' + c.name + '</div>' +
+      '<button class="cei-del" onclick="this.parentElement.remove()">✕</button></div>';
+  }).join('');
 }
 
 // ==================== TAB SWITCHING ====================
@@ -870,7 +871,11 @@ function switchTab(idx) {
 }
 
 // ==================== INIT ====================
-document.getElementById('page-login').classList.add('active');
+// Also bind login events in case onclick fails
+document.addEventListener('DOMContentLoaded', function() {
+  // Ensure login page is active
+  document.getElementById('page-login').classList.add('active');
+});
 </script>
 </body>
 </html>
