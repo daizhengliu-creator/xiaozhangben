@@ -6,9 +6,9 @@
 <title>小账本 - 轻松记账</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{--primary:#10B981;--primary-dark:#059669;--primary-light:#D1FAE5;--income:#10B981;--expense:#EF4444;--bg:#F5F7FA;--card:#FFFFFF;--text:#1E293B;--text2:#64748B;--text3:#94A3B8;--border:#E2E8F0;--radius:12px}
-body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-serif;color:var(--text);background:#000;-webkit-font-smoothing:antialiased}
-@media(min-width:431px){body{background:#E8ECF0;display:flex;justify-content:center;align-items:center;min-height:100vh}#phone{width:393px;height:852px;background:var(--bg);border-radius:44px;border:6px solid #1a1a2e;overflow:hidden;position:relative;box-shadow:0 24px 80px rgba(0,0,0,.25)}#phone::before{content:'';position:absolute;top:12px;left:50%;transform:translateX(-50%);width:130px;height:28px;background:#1a1a2e;border-radius:0 0 16px 16px;z-index:99;pointer-events:none}}
+:root{--primary:#4F46E5;--primary-dark:#4338CA;--primary-light:#EEF2FF;--primary-sub:#C7D2FE;--income:#059669;--expense:#DC2626;--bg:#F8FAFC;--card:#FFFFFF;--text:#0F172A;--text2:#64748B;--text3:#94A3B8;--border:#E2E8F0;--radius:10px;--shadow:0 1px 3px rgba(0,0,0,.06)}
+body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-serif;color:var(--text);background:#0F172A;-webkit-font-smoothing:antialiased}
+@media(min-width:431px){body{background:#E2E8F0;display:flex;justify-content:center;align-items:center;min-height:100vh}#phone{width:393px;height:852px;background:var(--bg);border-radius:44px;border:6px solid #1e293b;overflow:hidden;position:relative;box-shadow:0 25px 80px rgba(0,0,0,.3)}#phone::before{content:'';position:absolute;top:12px;left:50%;transform:translateX(-50%);width:130px;height:28px;background:#1e293b;border-radius:0 0 16px 16px;z-index:99;pointer-events:none}}
 @media(max-width:430px){body{background:var(--bg)}#phone{width:100%;height:100dvh;overflow:hidden;position:relative}}
 #phone{display:flex;flex-direction:column}
 .pages-container{flex:1;position:relative;overflow:hidden}
@@ -17,211 +17,212 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
 .page.anim{transition:transform .32s cubic-bezier(.4,0,.2,1),opacity .28s ease}
 .page-content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:8px}
 .page-content::-webkit-scrollbar{display:none}
-.status-bar{display:flex;justify-content:space-between;padding:14px 20px 4px;font-size:12px;font-weight:600;background:var(--card);color:var(--text);flex-shrink:0}
-.auth-page .status-bar{background:transparent;color:#fff}
-.header{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:var(--card);min-height:50px;flex-shrink:0}
-.header-title{font-size:18px;font-weight:600}
-.header-back{font-size:20px;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:none;background:none;color:var(--text);border-radius:50%}
-.header-back:active{background:#f0f0f0}
+.st-bar{display:flex;justify-content:space-between;padding:12px 20px 4px;font-size:12px;font-weight:600;background:var(--card);color:var(--text);flex-shrink:0}
+.auth-page .st-bar{background:transparent;color:#fff}
+.header{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:var(--card);min-height:50px;flex-shrink:0;border-bottom:1px solid var(--border)}
+.header-title{font-size:17px;font-weight:600}
+.header-back{font-size:20px;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:none;background:none;color:var(--text);border-radius:8px}
+.header-back:active{background:var(--border)}
 .header-right{font-size:14px;color:var(--primary);font-weight:600;cursor:pointer;border:none;background:none;padding:6px 12px;border-radius:8px}
 .header-right:active{background:var(--primary-light)}
-.btn-primary{background:var(--primary);color:#fff;border:none;border-radius:var(--radius);padding:14px 24px;font-size:16px;font-weight:600;width:100%;cursor:pointer;transition:all .2s}
-.btn-primary:active{transform:scale(.98);background:var(--primary-dark)}
-.btn-primary.loading{opacity:.7;pointer-events:none}
-.btn-outline{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:12px 20px;font-size:15px;cursor:pointer;width:100%}
-.btn-outline:active{background:#f8f8f8}
-.input-group{margin-bottom:16px}
+.btn-p{background:var(--primary);color:#fff;border:none;border-radius:var(--radius);padding:14px 24px;font-size:15px;font-weight:600;width:100%;cursor:pointer;transition:all .15s}
+.btn-p:active{transform:scale(.97);background:var(--primary-dark)}
+.btn-p.loading{opacity:.6;pointer-events:none}
+.input-group{margin-bottom:14px}
 .input-label{font-size:13px;font-weight:500;color:var(--text2);margin-bottom:6px;display:block}
-.input-field{width:100%;padding:14px 16px;border:1px solid var(--border);border-radius:var(--radius);font-size:15px;outline:none;background:var(--card);color:var(--text);transition:border .2s}
-.input-field:focus{border-color:var(--primary)}
-.input-field::placeholder{color:var(--text3)}
-.tab-bar{display:flex;align-items:center;justify-content:space-around;background:var(--card);padding:4px 0 max(8px,env(safe-area-inset-bottom,0));border-top:1px solid #f0f0f0;flex-shrink:0;position:relative;z-index:20}
-.tab-item{display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;padding:4px 12px;border:none;background:none;font-size:10px;color:var(--text3);transition:color .15s}
+.input-f{width:100%;padding:13px 16px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:15px;outline:none;background:var(--card);color:var(--text);transition:border .2s}
+.input-f:focus{border-color:var(--primary)}
+.input-f::placeholder{color:var(--text3)}
+.tab-bar{display:flex;align-items:center;justify-content:space-around;background:var(--card);padding:4px 0 max(8px,env(safe-area-inset-bottom,0));border-top:1px solid var(--border);flex-shrink:0;z-index:20}
+.tab-item{display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;padding:4px 10px;border:none;background:none;font-size:10px;color:var(--text3);transition:color .15s}
 .tab-item.active{color:var(--primary)}
 .tab-item .tab-icon{font-size:22px;line-height:1.2}
-.tab-add{width:48px;height:48px;border-radius:24px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));border:none;color:#fff;font-size:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:-14px;box-shadow:0 4px 12px rgba(16,185,129,.35)}
-.tab-add:active{transform:scale(.92)}
-.card{background:var(--card);border-radius:var(--radius);padding:20px;margin:12px 16px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.tab-add{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-dark));border:none;color:#fff;font-size:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:-14px;box-shadow:0 4px 16px rgba(79,70,229,.4)}
+.tab-add:active{transform:scale(.9)}
 
-/* ======== Auth ======== */
-.auth-page{background:linear-gradient(135deg,var(--primary),#059669)}
+/* Auth */
+.auth-pg{background:linear-gradient(135deg,#312E81,#4F46E5)}
 .auth-body{padding:0 32px 40px;flex:1;display:flex;flex-direction:column;justify-content:center}
 .auth-logo{text-align:center;margin-bottom:36px}
-.auth-logo .logo-icon{width:72px;height:72px;border-radius:36px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 16px}
-.auth-logo h1{color:#fff;font-size:28px;font-weight:700}
-.auth-logo p{color:rgba(255,255,255,.7);font-size:14px;margin-top:4px}
-.auth-box{background:var(--card);border-radius:20px;padding:28px 24px;box-shadow:0 8px 30px rgba(0,0,0,.1)}
-.auth-tabs{display:flex;margin-bottom:20px;border-bottom:2px solid #f0f0f0}
+.auth-logo .logo-i{width:72px;height:72px;border-radius:36px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 16px;backdrop-filter:blur(4px)}
+.auth-logo h1{color:#fff;font-size:28px;font-weight:700;letter-spacing:-.5px}
+.auth-logo p{color:rgba(255,255,255,.65);font-size:14px;margin-top:4px}
+.auth-box{background:var(--card);border-radius:20px;padding:28px 24px;box-shadow:0 8px 30px rgba(0,0,0,.12)}
+.auth-tabs{display:flex;margin-bottom:20px;border-bottom:2px solid var(--border)}
 .auth-tab{flex:1;text-align:center;padding:12px 0;font-size:15px;font-weight:500;color:var(--text3);cursor:pointer;border:none;background:none;position:relative}
 .auth-tab.active{color:var(--primary)}
-.auth-tab.active::after{content:'';position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);width:40px;height:2px;background:var(--primary);border-radius:1px}
+.auth-tab.active::after{content:'';position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);width:40px;height:2.5px;background:var(--primary);border-radius:2px}
 .auth-forgot{text-align:right;font-size:13px;color:var(--primary);margin-top:12px;cursor:pointer;border:none;background:none}
 .auth-footer{text-align:center;margin-top:24px;font-size:13px;color:var(--text3)}
 .auth-footer a{color:var(--primary);text-decoration:none;cursor:pointer;font-weight:500}
 
-/* ======== Home ======== */
-.balance-card{background:linear-gradient(135deg,var(--primary),#059669);border-radius:20px;padding:24px 24px 20px;margin:0 16px;color:#fff}
-.balance-label{font-size:13px;color:rgba(255,255,255,.7)}
-.balance-amount{font-size:36px;font-weight:700;margin:4px 0 16px}
-.balance-row{display:flex;gap:16px}
-.balance-item{flex:1}
-.balance-item-label{font-size:12px;color:rgba(255,255,255,.6)}
-.balance-item-amount{font-size:18px;font-weight:600;margin-top:2px}
-.balance-item-amount.income{color:#A7F3D0}
-.balance-item-amount.expense{color:#FCA5A5}
-.quick-actions{display:flex;gap:12px;padding:16px 16px 8px}
-.quick-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;cursor:pointer;font-size:14px;font-weight:500;transition:all .2s}
-.quick-btn:active{transform:scale(.97);background:#f8f8f8}
-.quick-btn .q-icon{font-size:20px}
-.section-header{display:flex;justify-content:space-between;align-items:center;padding:16px 16px 8px}
-.section-title{font-size:17px;font-weight:600}
-.section-more{font-size:13px;color:var(--primary);cursor:pointer;border:none;background:none}
+/* Home */
+.bal-card{background:linear-gradient(135deg,#312E81,#4F46E5);border-radius:20px;padding:24px 24px 20px;margin:0 16px;color:#fff}
+.bal-label{font-size:13px;color:rgba(255,255,255,.65)}
+.bal-amt{font-size:34px;font-weight:700;margin:4px 0 16px;letter-spacing:-1px}
+.bal-row{display:flex;gap:20px}
+.bal-itm{flex:1}
+.bal-itm-lbl{font-size:12px;color:rgba(255,255,255,.55)}
+.bal-itm-amt{font-size:18px;font-weight:600;margin-top:2px}
+.bal-itm-amt.inc{color:#A7F3D0}
+.bal-itm-amt.exp{color:#FCA5A5}
+.q-actions{display:flex;gap:12px;padding:16px 16px 8px}
+.q-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;cursor:pointer;font-size:14px;font-weight:500;transition:all .15s}
+.q-btn:active{transform:scale(.97);background:var(--primary-light)}
+.sec-hdr{display:flex;justify-content:space-between;align-items:center;padding:16px 16px 8px}
+.sec-title{font-size:16px;font-weight:600}
+.sec-more{font-size:13px;color:var(--primary);cursor:pointer;border:none;background:none;font-weight:500}
 
-/* ======== Transaction Item ======== */
-.tx-item{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--card);margin:0 16px 1px;cursor:pointer;transition:background .15s}
-.tx-item:active{background:#fafafa}
-.tx-item:first-child{border-radius:var(--radius) var(--radius) 0 0}
-.tx-item:last-child{border-radius:0 0 var(--radius) var(--radius);margin-bottom:12px}
-.tx-item:only-child{border-radius:var(--radius)}
-.tx-icon{width:42px;height:42px;border-radius:21px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+/* Tx Item */
+.tx-it{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--card);margin:0 16px 1px;cursor:pointer;transition:background .12s;border-left:3px solid transparent}
+.tx-it:active{background:#FAFAFA}
+.tx-it:first-child{border-radius:var(--radius) var(--radius) 0 0}
+.tx-it:last-child{border-radius:0 0 var(--radius) var(--radius);margin-bottom:12px}
+.tx-it:only-child{border-radius:var(--radius)}
+.tx-it.income{border-left-color:var(--income)}
+.tx-it.expense{border-left-color:var(--expense)}
+.tx-ic{width:40px;height:40px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .tx-info{flex:1;min-width:0}
 .tx-name{font-size:14px;font-weight:500}
 .tx-cat{font-size:12px;color:var(--text3);margin-top:1px}
-.tx-amount{font-size:15px;font-weight:600;white-space:nowrap}
-.tx-amount.income{color:var(--income)}
-.tx-amount.expense{color:var(--expense)}
-.tx-item .tx-del{font-size:16px;color:var(--text3);cursor:pointer;border:none;background:none;padding:4px;display:none}
-.tx-item.show-del .tx-del{display:block}
+.tx-amt{font-size:15px;font-weight:600;white-space:nowrap}
+.tx-amt.income{color:var(--income)}
+.tx-amt.expense{color:var(--expense)}
+.tx-del{font-size:14px;color:var(--text3);cursor:pointer;border:none;background:none;padding:4px;display:none}
+.tx-it.show-del .tx-del{display:block}
 
-/* ======== Transactions ======== */
-.filter-row{display:flex;gap:8px;padding:12px 16px 4px;overflow-x:auto;flex-shrink:0}
-.filter-row::-webkit-scrollbar{display:none}
-.filter-tab{padding:7px 18px;border-radius:16px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:var(--card);color:var(--text2);white-space:nowrap;transition:all .2s;border:1px solid var(--border);flex-shrink:0}
-.filter-tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
-.filter-tab:active{transform:scale(.95)}
-.filter-row-cat{padding:0 16px 8px;display:flex;gap:6px;overflow-x:auto;flex-wrap:wrap;flex-shrink:0}
-.filter-row-cat::-webkit-scrollbar{display:none}
-.filter-cat{padding:5px 12px;border-radius:12px;font-size:12px;cursor:pointer;border:none;background:var(--card);color:var(--text2);white-space:nowrap;border:1px solid var(--border);transition:all .15s}
-.filter-cat.active{background:var(--primary-light);color:var(--primary);border-color:var(--primary)}
-.date-header{font-size:13px;font-weight:600;color:var(--text2);padding:16px 16px 8px}
+/* Filters */
+.fltr-row{display:flex;gap:6px;padding:12px 16px 4px;overflow-x:auto;flex-shrink:0}
+.fltr-row::-webkit-scrollbar{display:none}
+.fltr-tab{padding:6px 16px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:var(--card);color:var(--text2);white-space:nowrap;transition:all .15s;border:1px solid var(--border)}
+.fltr-tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.fltr-cat-row{padding:0 16px 8px;display:flex;gap:6px;overflow-x:auto;flex-wrap:wrap;flex-shrink:0}
+.fltr-cat{padding:4px 12px;border-radius:14px;font-size:12px;cursor:pointer;border:none;background:var(--card);color:var(--text2);white-space:nowrap;border:1px solid var(--border);transition:all .12s}
+.fltr-cat.active{background:var(--primary-light);color:var(--primary);border-color:var(--primary-sub)}
+.dt-hdr{font-size:13px;font-weight:600;color:var(--text2);padding:16px 16px 8px}
 
-/* ======== Add / Numpad ======== */
-.add-type-toggle{display:flex;gap:12px;padding:12px 16px 8px;flex-shrink:0}
-.add-type-btn{flex:1;padding:10px;border-radius:10px;border:none;font-size:15px;font-weight:500;cursor:pointer;transition:all .2s}
+/* Add */
+.add-type-wrap{display:flex;gap:12px;padding:12px 16px 6px;flex-shrink:0}
+.add-type-btn{flex:1;padding:10px;border-radius:10px;border:none;font-size:14px;font-weight:500;cursor:pointer;transition:all .15s}
 .add-type-btn.active{background:var(--primary);color:#fff}
 .add-type-btn:not(.active){background:var(--card);color:var(--text2);border:1px solid var(--border)}
-.amount-display{text-align:center;padding:8px 16px;flex-shrink:0}
-.amount-display .value{font-size:42px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums}
-.amount-display .value.income{color:var(--income)}
-.amount-display .value.expense{color:var(--expense)}
+.amt-display{text-align:center;padding:12px 16px 4px;flex-shrink:0}
+.amt-display .amt-val{font-size:44px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:-1px}
+.amt-display .amt-val.income{color:var(--income)}
+.amt-display .amt-val.expense{color:var(--expense)}
 .numpad{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:8px 16px;flex-shrink:0}
-.numpad-btn{height:52px;border-radius:12px;border:none;font-size:22px;font-weight:500;cursor:pointer;background:var(--card);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.06);transition:all .1s}
-.numpad-btn:active{transform:scale(.94);background:#f0f0f0}
-.numpad-btn.fn{background:#f5f5f5;color:var(--text2);font-size:18px}
-.numpad-btn.fn:active{background:#e8e8e8}
-.numpad-btn.confirm{background:var(--primary);color:#fff;font-size:16px;font-weight:600}
-.numpad-btn.confirm:active{background:var(--primary-dark)}
-.numpad-btn.disabled{opacity:.4;pointer-events:none}
+.np-btn{height:50px;border-radius:12px;border:none;font-size:22px;font-weight:500;cursor:pointer;background:var(--card);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.04);transition:all .1s;border:1px solid var(--border)}
+.np-btn:active{transform:scale(.94);background:var(--border)}
+.np-btn.fn{background:#F1F5F9;color:var(--text2);font-size:16px;border-color:transparent}
+.np-btn.fn:active{background:#E2E8F0}
+.np-btn.ok{background:var(--primary);color:#fff;font-size:18px;font-weight:600;border-color:transparent}
+.np-btn.ok:active{background:var(--primary-dark)}
+.np-btn.ok.disabled{opacity:.4;pointer-events:none}
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 6px;padding:8px 16px}
+.cat-it{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:8px 4px;border-radius:var(--radius);border:none;background:none;transition:all .12s}
+.cat-it:active{background:var(--primary-light)}
+.cat-it .cat-ic{width:44px;height:44px;border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.cat-it .cat-nm{font-size:11px;color:var(--text2)}
 
-/* ======== Detail ======== */
-.detail-card{background:var(--card);text-align:center;padding:32px 20px;margin:12px 16px;border-radius:var(--radius)}
-.detail-card .d-icon{width:56px;height:56px;border-radius:28px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px}
-.detail-card .d-amount{font-size:32px;font-weight:700;margin:8px 0 4px}
-.detail-card .d-name{font-size:17px;font-weight:500;margin-bottom:4px}
-.detail-card .d-cat{font-size:13px;color:var(--text3)}
-.detail-info{padding:0 16px;margin:12px 16px;background:var(--card);border-radius:var(--radius)}
-.detail-row{display:flex;justify-content:space-between;padding:16px 0;font-size:14px}
-.detail-row+.detail-row{border-top:1px solid #f5f5f5}
-.detail-row .label{color:var(--text2)}
-.detail-row .value{font-weight:500;text-align:right;max-width:60%}
-.detail-actions{display:flex;gap:12px;padding:16px}
-.detail-actions button{flex:1;padding:14px;border-radius:var(--radius);font-size:15px;font-weight:500;cursor:pointer;border:none}
-.detail-actions .btn-del{background:#FEF2F2;color:var(--expense)}
-.detail-actions .btn-del:active{background:#FEE2E2}
-.detail-actions .btn-edit{background:var(--primary-light);color:var(--primary)}
-.detail-actions .btn-edit:active{background:#A7F3D0}
+/* Detail */
+.dt-card{background:var(--card);text-align:center;padding:32px 20px;margin:12px 16px;border-radius:var(--radius);border:1px solid var(--border)}
+.dt-card .dt-ic{width:56px;height:56px;border-radius:28px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px}
+.dt-card .dt-amt{font-size:34px;font-weight:700;margin:8px 0 4px;letter-spacing:-1px}
+.dt-card .dt-nm{font-size:17px;font-weight:500}
+.dt-card .dt-sub{font-size:13px;color:var(--text3);margin-top:4px}
+.dt-info{background:var(--card);margin:12px 16px;border-radius:var(--radius);border:1px solid var(--border);overflow:hidden}
+.dt-row{display:flex;justify-content:space-between;padding:14px 16px;font-size:14px}
+.dt-row+.dt-row{border-top:1px solid var(--border)}
+.dt-row .lb{color:var(--text2)}
+.dt-row .vl{font-weight:500;text-align:right;max-width:60%}
+.dt-acts{display:flex;gap:12px;padding:16px}
+.dt-acts button{flex:1;padding:13px;border-radius:var(--radius);font-size:14px;font-weight:500;cursor:pointer;border:none}
+.dt-acts .btn-del{background:#FEF2F2;color:var(--expense)}
+.dt-acts .btn-del:active{background:#FEE2E2}
+.dt-acts .btn-back{background:var(--primary-light);color:var(--primary)}
+.dt-acts .btn-back:active{background:#C7D2FE}
 
-/* ======== Statistics ======== */
-.stats-period{display:flex;align-items:center;gap:8px;padding:12px 16px 0;flex-shrink:0}
-.stats-period-btn{padding:6px 16px;border-radius:16px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:var(--card);color:var(--text2);transition:all .2s;border:1px solid var(--border)}
-.stats-period-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
-.month-selector{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:var(--card);margin:8px 16px;border-radius:var(--radius)}
-.month-selector .month-text{font-size:16px;font-weight:600}
-.month-nav{font-size:18px;cursor:pointer;color:var(--text2);border:none;background:none;padding:4px 8px}
-.month-nav:active{color:var(--primary)}
-.summary-cards{display:flex;gap:12px;padding:8px 16px}
-.summary-card{flex:1;background:var(--card);border-radius:var(--radius);padding:16px;text-align:center}
-.summary-card .sc-label{font-size:12px;color:var(--text2)}
-.summary-card .sc-amount{font-size:20px;font-weight:700;margin-top:6px}
-.summary-card .sc-amount.income{color:var(--income)}
-.summary-card .sc-amount.expense{color:var(--expense)}
-.chart-wrap{background:var(--card);margin:0 16px 12px;border-radius:var(--radius);padding:16px;height:180px;position:relative}
+/* Stats */
+.stats-period{display:flex;gap:8px;padding:12px 16px 0;flex-shrink:0}
+.stats-p-btn{padding:5px 16px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:var(--card);color:var(--text2);border:1px solid var(--border);transition:all .15s}
+.stats-p-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.month-sel{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:var(--card);margin:8px 16px;border-radius:var(--radius);border:1px solid var(--border)}
+.month-sel .month-txt{font-size:15px;font-weight:600}
+.month-nav{font-size:18px;cursor:pointer;color:var(--text2);border:none;background:none;padding:4px 8px;border-radius:6px}
+.month-nav:active{background:var(--border);color:var(--primary)}
+.sum-cards{display:flex;gap:12px;padding:8px 16px}
+.sum-card{flex:1;background:var(--card);border-radius:var(--radius);padding:16px;text-align:center;border:1px solid var(--border)}
+.sum-card .sc-lb{font-size:12px;color:var(--text2)}
+.sum-card .sc-amt{font-size:20px;font-weight:700;margin-top:6px}
+.sum-card .sc-amt.income{color:var(--income)}
+.sum-card .sc-amt.expense{color:var(--expense)}
+.chart-wrap{background:var(--card);margin:0 16px 12px;border-radius:var(--radius);padding:16px;height:190px;border:1px solid var(--border)}
 .chart-wrap canvas{width:100%;height:100%}
-.stat-bar-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--card);margin:0 16px 1px}
-.stat-bar-item:first-child{border-radius:var(--radius) var(--radius) 0 0;margin-top:8px}
-.stat-bar-item:last-child{border-radius:0 0 var(--radius) var(--radius);margin-bottom:12px}
-.stat-bar-item .sbi-icon{width:36px;height:36px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.stat-bar-item .sbi-info{flex:1}
-.stat-bar-item .sbi-name{font-size:14px;font-weight:500}
-.stat-bar-item .sbi-bar-wrap{height:6px;border-radius:3px;margin-top:6px;overflow:hidden;background:#f0f0f0}
-.stat-bar-item .sbi-bar{height:100%;border-radius:3px;transition:width .6s ease}
-.stat-bar-item .sbi-amount{font-size:14px;font-weight:600;white-space:nowrap}
+.sbar-it{display:flex;align-items:center;gap:10px;padding:11px 16px;background:var(--card);margin:0 16px 1px}
+.sbar-it:first-child{border-radius:var(--radius) var(--radius) 0 0;margin-top:8px}
+.sbar-it:last-child{border-radius:0 0 var(--radius) var(--radius);margin-bottom:12px}
+.sbar-it .sbi-ic{width:34px;height:34px;border-radius:17px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.sbar-it .sbi-info{flex:1}
+.sbar-it .sbi-nm{font-size:14px;font-weight:500}
+.sbar-it .sbi-bar-w{height:5px;border-radius:3px;margin-top:5px;overflow:hidden;background:#F1F5F9}
+.sbar-it .sbi-bar{height:100%;border-radius:3px;transition:width .6s ease}
+.sbar-it .sbi-amt{font-size:14px;font-weight:600;white-space:nowrap}
 
-/* ======== Profile ======== */
-.profile-header{background:linear-gradient(135deg,var(--primary),#059669);padding:36px 20px 28px;text-align:center;color:#fff}
-.profile-avatar{width:72px;height:72px;border-radius:36px;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 12px}
-.profile-name{font-size:20px;font-weight:600}
-.profile-phone{font-size:13px;color:rgba(255,255,255,.7);margin-top:4px}
-.profile-stats{display:flex;gap:1px;background:var(--card);margin:0 16px;border-radius:var(--radius);overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-top:-20px}
-.profile-stat{flex:1;text-align:center;padding:16px 8px;background:var(--card)}
-.profile-stat .ps-num{font-size:20px;font-weight:700}
-.profile-stat .ps-label{font-size:12px;color:var(--text3);margin-top:2px}
-.menu-list{background:var(--card);margin:12px 16px;border-radius:var(--radius);overflow:hidden}
-.menu-item{display:flex;align-items:center;gap:12px;padding:16px;cursor:pointer;border:none;background:none;width:100%;text-align:left;font-size:15px;color:var(--text)}
-.menu-item:active{background:#f8f8f8}
-.menu-item+.menu-item{border-top:1px solid #f5f5f5}
-.menu-item .mi-icon{font-size:20px}
-.menu-item .mi-arrow{font-size:14px;color:var(--text3);margin-left:auto}
+/* Profile */
+.prof-hdr{background:linear-gradient(135deg,#312E81,#4F46E5);padding:36px 20px 28px;text-align:center;color:#fff}
+.prof-av{width:72px;height:72px;border-radius:36px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 12px;backdrop-filter:blur(4px)}
+.prof-nm{font-size:20px;font-weight:600}
+.prof-ph{font-size:13px;color:rgba(255,255,255,.65);margin-top:4px}
+.prof-stats{display:flex;background:var(--card);margin:0 16px;border-radius:var(--radius);overflow:hidden;margin-top:-20px;border:1px solid var(--border)}
+.prof-stat{flex:1;text-align:center;padding:16px 8px}
+.prof-stat .ps-n{font-size:20px;font-weight:700}
+.prof-stat .ps-l{font-size:12px;color:var(--text3);margin-top:2px}
+.menu-l{background:var(--card);margin:12px 16px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)}
+.menu-it{display:flex;align-items:center;gap:12px;padding:16px;cursor:pointer;border:none;background:none;width:100%;text-align:left;font-size:15px;color:var(--text)}
+.menu-it:active{background:#FAFAFA}
+.menu-it+.menu-it{border-top:1px solid var(--border)}
+.menu-it .mi-ic{font-size:20px}
+.menu-it .mi-ar{font-size:16px;color:var(--text3);margin-left:auto}
 
-/* ======== Modal ======== */
-.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.45);z-index:100;justify-content:center;align-items:center}
+/* Modal */
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,.5);z-index:100;justify-content:center;align-items:center}
 .modal-overlay.show{display:flex}
 .modal-overlay.show .modal-box{animation:modalIn .25s ease}
-@keyframes modalIn{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
-.modal-box{background:var(--card);border-radius:16px;padding:28px 24px 20px;width:300px;text-align:center}
-.modal-title{font-size:17px;font-weight:600;margin-bottom:8px}
+@keyframes modalIn{from{transform:translateY(20px) scale(.95);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+.modal-box{background:var(--card);border-radius:20px;padding:28px 24px 20px;width:300px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-title{font-size:17px;font-weight:600;margin-bottom:6px}
 .modal-desc{font-size:14px;color:var(--text2);margin-bottom:24px}
 .modal-actions{display:flex;gap:12px}
-.modal-actions button{flex:1;padding:12px;border-radius:var(--radius);font-size:15px;font-weight:500;cursor:pointer;border:none}
-.modal-actions .modal-cancel{background:#f0f0f0;color:var(--text2)}
-.modal-actions .modal-confirm{background:var(--expense);color:#fff;font-weight:600}
-.modal-actions .modal-confirm2{background:var(--primary);color:#fff;font-weight:600}
+.modal-actions button{flex:1;padding:12px;border-radius:var(--radius);font-size:14px;font-weight:500;cursor:pointer;border:none}
+.modal-actions .modal-cancel{background:var(--border);color:var(--text2)}
+.modal-actions .modal-del{background:#FEF2F2;color:var(--expense);font-weight:600}
+.modal-actions .modal-out{background:#FEF2F2;color:var(--expense);font-weight:600}
 
-/* ======== Settings ======== */
-.settings-group{margin:12px 16px;background:var(--card);border-radius:var(--radius);overflow:hidden}
-.settings-item{display:flex;align-items:center;justify-content:space-between;padding:16px;font-size:15px;border:none;background:none;width:100%;cursor:pointer}
-.settings-item:active{background:#f8f8f8}
-.settings-item+.settings-item{border-top:1px solid #f5f5f5}
-.settings-item .si-left{display:flex;align-items:center;gap:10px}
-.settings-item .si-right{display:flex;align-items:center;gap:8px;color:var(--text3);font-size:14px}
-.logout-btn{display:block;width:calc(100% - 32px);margin:24px auto;padding:14px;border-radius:var(--radius);border:none;background:var(--card);color:var(--expense);font-size:16px;font-weight:500;cursor:pointer;text-align:center}
-.logout-btn:active{background:#fef2f2}
-.toggle{width:44px;height:26px;border-radius:13px;background:#ddd;position:relative;cursor:pointer;transition:background .2s;border:none;flex-shrink:0}
+/* Settings */
+.set-grp{background:var(--card);margin:12px 16px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)}
+.set-it{display:flex;align-items:center;justify-content:space-between;padding:15px 16px;font-size:14px;border:none;background:none;width:100%;cursor:pointer}
+.set-it:active{background:#FAFAFA}
+.set-it+.set-it{border-top:1px solid var(--border)}
+.set-it .si-l{display:flex;align-items:center;gap:10px}
+.set-it .si-r{display:flex;align-items:center;gap:8px;color:var(--text3);font-size:13px}
+.logout-btn{display:block;width:calc(100% - 32px);margin:24px auto;padding:14px;border-radius:var(--radius);border:1px solid #FEE2E2;background:var(--card);color:var(--expense);font-size:15px;font-weight:500;cursor:pointer;text-align:center}
+.logout-btn:active{background:#FEF2F2}
+.toggle{width:44px;height:26px;border-radius:13px;background:#CBD5E1;position:relative;cursor:pointer;transition:background .2s;border:none;flex-shrink:0}
 .toggle.on{background:var(--primary)}
-.toggle::after{content:'';width:22px;height:22px;border-radius:11px;background:#fff;position:absolute;top:2px;left:2px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.toggle::after{content:'';width:22px;height:22px;border-radius:11px;background:#fff;position:absolute;top:2px;left:2px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.1)}
 .toggle.on::after{transform:translateX(18px)}
 
-/* Category Edit */
-.cat-edit-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--card);margin:0 16px 1px}
-.cat-edit-item:first-child{border-radius:var(--radius) var(--radius) 0 0}
-.cat-edit-item:last-child{border-radius:0 0 var(--radius) var(--radius);margin-bottom:12px}
-.cat-edit-item .cei-icon{width:40px;height:40px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:18px}
-.cat-edit-item .cei-name{flex:1;font-size:15px}
-.cat-edit-item .cei-del{font-size:18px;color:var(--expense);cursor:pointer;border:none;background:none;padding:4px 8px}
-.empty-state{text-align:center;padding:60px 20px;color:var(--text3)}
-.empty-state .empty-icon{font-size:48px;margin-bottom:12px}
-.empty-state .empty-text{font-size:14px}
-.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.75);color:#fff;padding:10px 24px;border-radius:20px;font-size:14px;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none}
+/* Cat Edit */
+.ce-it{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--card);margin:0 16px 1px}
+.ce-it:first-child{border-radius:var(--radius) var(--radius) 0 0}
+.ce-it:last-child{border-radius:0 0 var(--radius) var(--radius);margin-bottom:12px}
+.ce-it .ce-ic{width:38px;height:38px;border-radius:19px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.ce-it .ce-nm{flex:1;font-size:14px}
+.ce-it .ce-del{font-size:18px;color:var(--text3);cursor:pointer;border:none;background:none;padding:4px 8px}
+.empty-s{text-align:center;padding:60px 20px;color:var(--text3)}
+.empty-s .empty-ic{font-size:48px;margin-bottom:12px}
+.empty-s .empty-t{font-size:14px}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:rgba(15,23,42,.85);color:#fff;padding:10px 24px;border-radius:20px;font-size:14px;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;backdrop-filter:blur(8px)}
 .toast.show{opacity:1}
 </style>
 </head>
@@ -230,11 +231,11 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
 <div class="pages-container">
 
 <!-- Login -->
-<div class="page auth-page" id="page-login">
-  <div class="status-bar"><span style="color:#fff">9:41</span><span style="color:rgba(255,255,255,.7)">📶 🔋</span></div>
+<div class="page auth-pg" id="page-login">
+  <div class="st-bar"><span style="color:#fff">9:41</span><span style="color:rgba(255,255,255,.6)">📶 🔋</span></div>
   <div class="auth-body">
     <div class="auth-logo">
-      <div class="logo-icon">💰</div>
+      <div class="logo-i">💰</div>
       <h1>小账本</h1>
       <p>轻松记账，理清每一笔</p>
     </div>
@@ -244,98 +245,75 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
         <button class="auth-tab" onclick="switchAuthTab(1)">验证码登录</button>
       </div>
       <div id="login-password">
-        <div class="input-group">
-          <label class="input-label">手机号</label>
-          <input class="input-field" type="tel" placeholder="测试账号: 13888888888" maxlength="11" value="13888888888">
-        </div>
-        <div class="input-group">
-          <label class="input-label">密码</label>
-          <input class="input-field" type="password" placeholder="测试密码: 123456" value="123456">
-        </div>
+        <div class="input-group"><label class="input-label">手机号</label><input class="input-f" type="tel" placeholder="测试账号: 13888888888" maxlength="11" value="13888888888"></div>
+        <div class="input-group"><label class="input-label">密码</label><input class="input-f" type="password" placeholder="测试密码: 123456" value="123456"></div>
         <button class="auth-forgot" onclick="navigateTo('forgot')">忘记密码？</button>
-        <button class="btn-primary" style="margin-top:16px" onclick="handleLogin(this)">登 录</button>
+        <button class="btn-p" style="margin-top:16px" onclick="handleLogin(this)">登 录</button>
       </div>
       <div id="login-code" style="display:none">
-        <div class="input-group">
-          <label class="input-label">手机号</label>
-          <input class="input-field" type="tel" placeholder="请输入手机号" maxlength="11">
-        </div>
-        <div class="input-group">
-          <label class="input-label">验证码</label>
-          <div style="display:flex;gap:12px">
-            <input class="input-field" type="text" placeholder="请输入验证码" maxlength="6" style="flex:1">
-            <button style="padding:14px 16px;border-radius:var(--radius);border:1px solid var(--primary);background:var(--card);color:var(--primary);font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap" onclick="sendCode(this)">获取验证码</button>
-          </div>
-        </div>
-        <button class="btn-primary" style="margin-top:8px" onclick="handleLogin(this)">登 录</button>
+        <div class="input-group"><label class="input-label">手机号</label><input class="input-f" type="tel" placeholder="请输入手机号" maxlength="11"></div>
+        <div class="input-group"><label class="input-label">验证码</label><div style="display:flex;gap:12px"><input class="input-f" type="text" placeholder="请输入验证码" maxlength="6" style="flex:1"><button style="padding:13px 16px;border-radius:var(--radius);border:1px solid var(--primary);background:var(--card);color:var(--primary);font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap" onclick="sendCode(this)">获取验证码</button></div></div>
+        <button class="btn-p" style="margin-top:8px" onclick="handleLogin(this)">登 录</button>
       </div>
-      <div class="auth-footer">
-        还没有账号？<a onclick="navigateTo('register')">立即注册</a>
-      </div>
+      <div class="auth-footer">还没有账号？<a onclick="navigateTo('register')">立即注册</a></div>
     </div>
   </div>
 </div>
 
 <!-- Register -->
-<div class="page auth-page" id="page-register">
-  <div class="status-bar"><span style="color:#fff">9:41</span><span style="color:rgba(255,255,255,.7)">📶 🔋</span></div>
-  <div class="header" style="background:transparent;position:relative;z-index:5">
-    <button class="header-back" style="color:#fff" onclick="goBack()">←</button>
-    <span class="header-title" style="color:#fff">注册</span>
-    <span style="width:32px"></span>
+<div class="page auth-pg" id="page-register">
+  <div class="st-bar"><span style="color:#fff">9:41</span><span style="color:rgba(255,255,255,.6)">📶 🔋</span></div>
+  <div class="header" style="background:transparent;border:none;position:relative;z-index:5">
+    <button class="header-back" style="color:#fff" onclick="goBack()">←</button><span class="header-title" style="color:#fff">注册</span><span style="width:32px"></span>
   </div>
   <div class="auth-body" style="padding-top:0">
     <div class="auth-box" style="margin-top:12px">
-      <div class="input-group"><label class="input-label">手机号</label><input class="input-field" type="tel" placeholder="请输入手机号" maxlength="11"></div>
-      <div class="input-group"><label class="input-label">验证码</label><div style="display:flex;gap:12px"><input class="input-field" type="text" placeholder="请输入验证码" maxlength="6" style="flex:1"><button class="btn-outline" style="width:auto;white-space:nowrap;padding:14px 16px;font-size:14px" onclick="sendCode(this)">获取验证码</button></div></div>
-      <div class="input-group"><label class="input-label">设置密码</label><input class="input-field" type="password" placeholder="6-20位字母或数字"></div>
-      <div class="input-group"><label class="input-label">确认密码</label><input class="input-field" type="password" placeholder="再次输入密码"></div>
-      <button class="btn-primary" onclick="handleLogin(this)">注 册</button>
+      <div class="input-group"><label class="input-label">手机号</label><input class="input-f" type="tel" placeholder="请输入手机号" maxlength="11"></div>
+      <div class="input-group"><label class="input-label">验证码</label><div style="display:flex;gap:12px"><input class="input-f" type="text" placeholder="请输入验证码" maxlength="6" style="flex:1"><button style="padding:13px 16px;border-radius:var(--radius);border:1px solid var(--border);background:var(--card);color:var(--text);font-size:14px;cursor:pointer;white-space:nowrap;font-weight:500" onclick="sendCode(this)">获取验证码</button></div></div>
+      <div class="input-group"><label class="input-label">设置密码</label><input class="input-f" type="password" placeholder="6-20位字母或数字"></div>
+      <div class="input-group"><label class="input-label">确认密码</label><input class="input-f" type="password" placeholder="再次输入密码"></div>
+      <button class="btn-p" onclick="handleLogin(this)">注 册</button>
       <div class="auth-footer" style="margin-top:16px">已有账号？<a onclick="navigateTo('login')">返回登录</a></div>
     </div>
   </div>
 </div>
 
-<!-- Forgot Password -->
-<div class="page auth-page" id="page-forgot">
-  <div class="status-bar"><span style="color:#fff">9:41</span><span style="color:rgba(255,255,255,.7)">📶 🔋</span></div>
-  <div class="header" style="background:transparent;position:relative;z-index:5">
-    <button class="header-back" style="color:#fff" onclick="goBack()">←</button>
-    <span class="header-title" style="color:#fff">找回密码</span>
-    <span style="width:32px"></span>
+<!-- Forgot -->
+<div class="page auth-pg" id="page-forgot">
+  <div class="st-bar"><span style="color:#fff">9:41</span><span style="color:rgba(255,255,255,.6)">📶 🔋</span></div>
+  <div class="header" style="background:transparent;border:none;position:relative;z-index:5">
+    <button class="header-back" style="color:#fff" onclick="goBack()">←</button><span class="header-title" style="color:#fff">找回密码</span><span style="width:32px"></span>
   </div>
   <div class="auth-body" style="padding-top:0">
     <div class="auth-box" style="margin-top:12px">
-      <div class="input-group"><label class="input-label">手机号</label><input class="input-field" type="tel" placeholder="请输入注册手机号" maxlength="11"></div>
-      <div class="input-group"><label class="input-label">验证码</label><div style="display:flex;gap:12px"><input class="input-field" type="text" placeholder="请输入验证码" maxlength="6" style="flex:1"><button class="btn-outline" style="width:auto;white-space:nowrap;padding:14px 16px;font-size:14px" onclick="sendCode(this)">获取验证码</button></div></div>
-      <div class="input-group"><label class="input-label">新密码</label><input class="input-field" type="password" placeholder="6-20位字母或数字"></div>
-      <button class="btn-primary" onclick="handleLogin(this)">重置密码</button>
+      <div class="input-group"><label class="input-label">手机号</label><input class="input-f" type="tel" placeholder="请输入注册手机号" maxlength="11"></div>
+      <div class="input-group"><label class="input-label">验证码</label><div style="display:flex;gap:12px"><input class="input-f" type="text" placeholder="请输入验证码" maxlength="6" style="flex:1"><button style="padding:13px 16px;border-radius:var(--radius);border:1px solid var(--border);background:var(--card);color:var(--text);font-size:14px;cursor:pointer;white-space:nowrap;font-weight:500" onclick="sendCode(this)">获取验证码</button></div></div>
+      <div class="input-group"><label class="input-label">新密码</label><input class="input-f" type="password" placeholder="6-20位字母或数字"></div>
+      <button class="btn-p" onclick="handleLogin(this)">重置密码</button>
       <div class="auth-footer" style="margin-top:16px">记起来了？<a onclick="navigateTo('login')">返回登录</a></div>
     </div>
   </div>
 </div>
 
-<!-- ==================== MAIN ==================== -->
-
 <!-- Home -->
 <div class="page" id="page-home">
-  <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+  <div class="st-bar"><span>9:41</span><span>📶 🔋</span></div>
   <div class="header"><span class="header-title">我的账本</span><span style="font-size:22px;cursor:pointer" onclick="navigateTo('profile')">👤</span></div>
   <div class="page-content">
     <div style="padding-top:8px"></div>
-    <div class="balance-card">
-      <div class="balance-label">总资产 (¥)</div>
-      <div class="balance-amount" id="home-balance">¥12,468.00</div>
-      <div class="balance-row">
-        <div class="balance-item"><div class="balance-item-label">本月收入</div><div class="balance-item-amount income" id="home-income">¥4,280.00</div></div>
-        <div class="balance-item"><div class="balance-item-label">本月支出</div><div class="balance-item-amount expense" id="home-expense">¥1,932.25</div></div>
+    <div class="bal-card">
+      <div class="bal-label">总资产</div>
+      <div class="bal-amt" id="home-bal">¥12,468.00</div>
+      <div class="bal-row">
+        <div class="bal-itm"><div class="bal-itm-lbl">本月收入</div><div class="bal-itm-amt inc" id="home-inc">¥4,280.00</div></div>
+        <div class="bal-itm"><div class="bal-itm-lbl">本月支出</div><div class="bal-itm-amt exp" id="home-exp">¥1,932.25</div></div>
       </div>
     </div>
-    <div class="quick-actions">
-      <button class="quick-btn" onclick="navigateTo('add')"><span class="q-icon">💰</span>记一笔</button>
-      <button class="quick-btn" onclick="navigateTo('stats')"><span class="q-icon">📊</span>看报表</button>
+    <div class="q-actions">
+      <button class="q-btn" onclick="navigateTo('add')"><span style="font-size:20px">💰</span>记一笔</button>
+      <button class="q-btn" onclick="navigateTo('stats')"><span style="font-size:20px">📊</span>看报表</button>
     </div>
-    <div class="section-header"><span class="section-title">最近账单</span><button class="section-more" onclick="navigateTo('transactions')">查看全部 →</button></div>
+    <div class="sec-hdr"><span class="sec-title">最近账单</span><button class="sec-more" onclick="navigateTo('transactions')">查看全部 →</button></div>
     <div id="home-tx-list"></div>
   </div>
   <div class="tab-bar">
@@ -349,15 +327,15 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
 
 <!-- Transactions -->
 <div class="page" id="page-transactions">
-  <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
-  <div class="header"><span class="header-title">账单</span><span style="font-size:16px;cursor:pointer;color:var(--primary);font-weight:500;border:none;background:none" onclick="toggleTxDelMode()">管理</span></div>
+  <div class="st-bar"><span>9:41</span><span>📶 🔋</span></div>
+  <div class="header"><span class="header-title">账单</span><span style="font-size:14px;cursor:pointer;color:var(--primary);font-weight:600;border:none;background:none" onclick="toggleTxDelMode()">管理</span></div>
   <div class="page-content">
-    <div class="filter-row" id="tx-type-filters">
-      <button class="filter-tab active" data-filter="all" onclick="filterTx('all',this)">全部</button>
-      <button class="filter-tab" data-filter="income" onclick="filterTx('income',this)">收入</button>
-      <button class="filter-tab" data-filter="expense" onclick="filterTx('expense',this)">支出</button>
+    <div class="fltr-row" id="tx-type-filters">
+      <button class="fltr-tab active" onclick="filterTx('all',this)">全部</button>
+      <button class="fltr-tab" onclick="filterTx('income',this)">收入</button>
+      <button class="fltr-tab" onclick="filterTx('expense',this)">支出</button>
     </div>
-    <div class="filter-row-cat" id="tx-cat-filters"></div>
+    <div class="fltr-cat-row" id="tx-cat-filters"></div>
     <div id="tx-list"></div>
   </div>
   <div class="tab-bar">
@@ -369,87 +347,78 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
   </div>
 </div>
 
-<!-- Add Transaction -->
+<!-- Add -->
 <div class="page" id="page-add">
-  <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+  <div class="st-bar"><span>9:41</span><span>📶 🔋</span></div>
   <div class="header">
-    <button class="header-back" onclick="goBack()">✕</button>
-    <span class="header-title">记一笔</span>
-    <button class="header-right" id="add-save-btn" onclick="saveTransaction()">保存</button>
+    <button class="header-back" onclick="goBack()">✕</button><span class="header-title">记一笔</span>
+    <button class="header-right" onclick="saveTransaction()">保存</button>
   </div>
   <div class="page-content">
-    <div class="add-type-toggle">
+    <div class="add-type-wrap">
       <button class="add-type-btn active" id="add-type-inc" onclick="setAddType('income')">💰 收入</button>
       <button class="add-type-btn" id="add-type-exp" onclick="setAddType('expense')">💳 支出</button>
     </div>
-    <div class="amount-display">
-      <div class="value" id="add-amount-display">¥0.00</div>
+    <div class="amt-display">
+      <div class="amt-val" id="add-amt-display">¥0.00</div>
     </div>
-    <div class="numpad" id="numpad">
-      <button class="numpad-btn" onclick="numpadInput('7')">7</button>
-      <button class="numpad-btn" onclick="numpadInput('8')">8</button>
-      <button class="numpad-btn" onclick="numpadInput('9')">9</button>
-      <button class="numpad-btn fn" onclick="numpadBack()">⌫</button>
-      <button class="numpad-btn" onclick="numpadInput('4')">4</button>
-      <button class="numpad-btn" onclick="numpadInput('5')">5</button>
-      <button class="numpad-btn" onclick="numpadInput('6')">6</button>
-      <button class="numpad-btn fn" onclick="numpadClear()">C</button>
-      <button class="numpad-btn" onclick="numpadInput('1')">1</button>
-      <button class="numpad-btn" onclick="numpadInput('2')">2</button>
-      <button class="numpad-btn" onclick="numpadInput('3')">3</button>
-      <button class="numpad-btn confirm" id="numpad-confirm" onclick="saveTransaction()">✓</button>
-      <button class="numpad-btn" onclick="numpadInput('0')">0</button>
-      <button class="numpad-btn" onclick="numpadInput('00')">00</button>
-      <button class="numpad-btn" id="numpad-dot" onclick="numpadInput('.')">.</button>
-      <button class="numpad-btn fn" onclick="numpadClear()">重置</button>
+    <div class="numpad">
+      <button class="np-btn" onclick="npInput('7')">7</button>
+      <button class="np-btn" onclick="npInput('8')">8</button>
+      <button class="np-btn" onclick="npInput('9')">9</button>
+      <button class="np-btn fn" onclick="npBack()">⌫</button>
+      <button class="np-btn" onclick="npInput('4')">4</button>
+      <button class="np-btn" onclick="npInput('5')">5</button>
+      <button class="np-btn" onclick="npInput('6')">6</button>
+      <button class="np-btn fn" onclick="npClear()">C</button>
+      <button class="np-btn" onclick="npInput('1')">1</button>
+      <button class="np-btn" onclick="npInput('2')">2</button>
+      <button class="np-btn" onclick="npInput('3')">3</button>
+      <button class="np-btn ok" id="np-ok" onclick="saveTransaction()">✓</button>
+      <button class="np-btn" onclick="npInput('0')">0</button>
+      <button class="np-btn" onclick="npInput('00')">00</button>
+      <button class="np-btn" id="np-dot" onclick="npInput('.')">.</button>
+      <button class="np-btn fn" onclick="npClear()">重置</button>
     </div>
     <div style="padding:0 16px">
       <div class="input-label" style="margin:4px 0 6px">分类</div>
-      <div class="category-grid" id="category-grid"></div>
-      <div class="input-group" style="margin-top:8px">
-        <input class="input-field" id="add-note" placeholder="添加备注..." style="border-color:var(--border)">
-      </div>
+      <div class="cat-grid" id="cat-grid"></div>
+      <div class="input-group" style="margin-top:8px"><input class="input-f" id="add-note" placeholder="添加备注..."></div>
     </div>
-    <div style="padding:12px 16px 20px">
-      <button class="btn-primary" onclick="saveTransaction()">保存记录</button>
-    </div>
+    <div style="padding:12px 16px 20px"><button class="btn-p" onclick="saveTransaction()">保存记录</button></div>
   </div>
 </div>
 
 <!-- Detail -->
 <div class="page" id="page-detail">
-  <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
-  <div class="header">
-    <button class="header-back" onclick="goBack()">←</button>
-    <span class="header-title">账单详情</span>
-    <span style="width:32px"></span>
-  </div>
+  <div class="st-bar"><span>9:41</span><span>📶 🔋</span></div>
+  <div class="header"><button class="header-back" onclick="goBack()">←</button><span class="header-title">账单详情</span><span style="width:32px"></span></div>
   <div class="page-content" id="detail-content"></div>
 </div>
 
-<!-- Statistics -->
+<!-- Stats -->
 <div class="page" id="page-stats">
-  <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
-  <div class="header"><span class="header-title">统计</span><span style="font-size:16px;cursor:pointer;color:var(--primary);font-weight:500;border:none;background:none" onclick="exportData()">导出</span></div>
+  <div class="st-bar"><span>9:41</span><span>📶 🔋</span></div>
+  <div class="header"><span class="header-title">统计</span><span style="font-size:14px;cursor:pointer;color:var(--primary);font-weight:600;border:none;background:none" onclick="exportData()">导出</span></div>
   <div class="page-content">
     <div style="padding-top:8px"></div>
     <div class="stats-period">
-      <button class="stats-period-btn active" onclick="setStatsPeriod('month',this)">按月</button>
-      <button class="stats-period-btn" onclick="setStatsPeriod('year',this)">按年</button>
+      <button class="stats-p-btn active" onclick="setStatsPeriod('month',this)">按月</button>
+      <button class="stats-p-btn" onclick="setStatsPeriod('year',this)">按年</button>
     </div>
-    <div class="month-selector" id="stats-selector">
-      <button class="month-nav" id="stats-prev" onclick="statsPrev()">◀</button>
-      <span class="month-text" id="stats-label">2026年5月</span>
-      <button class="month-nav" id="stats-next" onclick="statsNext()">▶</button>
+    <div class="month-sel" id="stats-sel">
+      <button class="month-nav" onclick="statsNav(-1)">◀</button>
+      <span class="month-txt" id="stats-lb">2026年5月</span>
+      <button class="month-nav" onclick="statsNav(1)">▶</button>
     </div>
-    <div class="summary-cards" id="stats-summary">
-      <div class="summary-card"><div class="sc-label">收入</div><div class="sc-amount income">¥0</div></div>
-      <div class="summary-card"><div class="sc-label">支出</div><div class="sc-amount expense">¥0</div></div>
+    <div class="sum-cards" id="stats-sum">
+      <div class="sum-card"><div class="sc-lb">收入</div><div class="sc-amt income">¥0</div></div>
+      <div class="sum-card"><div class="sc-lb">支出</div><div class="sc-amt expense">¥0</div></div>
     </div>
-    <div class="section-header"><span class="section-title">收支趋势</span></div>
-    <div class="chart-wrap"><canvas id="stats-chart"></canvas></div>
-    <div class="section-header"><span class="section-title">支出分类排行</span></div>
-    <div id="stats-category-list"></div>
+    <div class="sec-hdr"><span class="sec-title">收支趋势</span></div>
+    <div class="chart-wrap"><canvas id="chart"></canvas></div>
+    <div class="sec-hdr"><span class="sec-title">支出分类排行</span></div>
+    <div id="stats-cat-list"></div>
   </div>
   <div class="tab-bar">
     <button class="tab-item" onclick="switchTab(0)"><span class="tab-icon">🏠</span>首页</button>
@@ -462,24 +431,24 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
 
 <!-- Profile -->
 <div class="page" id="page-profile">
-  <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+  <div class="st-bar"><span>9:41</span><span>📶 🔋</span></div>
   <div class="header"><button class="header-back" onclick="goBack()">←</button><span class="header-title">个人中心</span><span style="width:32px"></span></div>
   <div class="page-content">
-    <div class="profile-header">
-      <div class="profile-avatar">😊</div>
-      <div class="profile-name">小明</div>
-      <div class="profile-phone">138****8888</div>
+    <div class="prof-hdr">
+      <div class="prof-av">😊</div>
+      <div class="prof-nm">小明</div>
+      <div class="prof-ph">138****8888</div>
     </div>
-    <div class="profile-stats">
-      <div class="profile-stat"><div class="ps-num" id="profile-total">128</div><div class="ps-label">总账单</div></div>
-      <div class="profile-stat"><div class="ps-num" style="color:var(--income)" id="profile-income">¥28,460</div><div class="ps-label">总收入</div></div>
-      <div class="profile-stat"><div class="ps-num" style="color:var(--expense)" id="profile-expense">¥16,234</div><div class="ps-label">总支出</div></div>
+    <div class="prof-stats">
+      <div class="prof-stat"><div class="ps-n" id="prof-total">128</div><div class="ps-l">总账单</div></div>
+      <div class="prof-stat"><div class="ps-n" style="color:var(--income)" id="prof-inc">¥28,460</div><div class="ps-l">总收入</div></div>
+      <div class="prof-stat"><div class="ps-n" style="color:var(--expense)" id="prof-exp">¥16,234</div><div class="ps-l">总支出</div></div>
     </div>
-    <div class="menu-list">
-      <button class="menu-item" onclick="navigateTo('transactions')"><span class="mi-icon">📋</span>我的账单<span class="mi-arrow">›</span></button>
-      <button class="menu-item" onclick="navigateTo('stats')"><span class="mi-icon">📊</span>我的统计<span class="mi-arrow">›</span></button>
-      <button class="menu-item" onclick="navigateTo('categories')"><span class="mi-icon">🏷️</span>分类管理<span class="mi-arrow">›</span></button>
-      <button class="menu-item" onclick="navigateTo('settings')"><span class="mi-icon">⚙️</span>设置<span class="mi-arrow">›</span></button>
+    <div class="menu-l">
+      <button class="menu-it" onclick="navigateTo('transactions')"><span class="mi-ic">📋</span>我的账单<span class="mi-ar">›</span></button>
+      <button class="menu-it" onclick="navigateTo('stats')"><span class="mi-ic">📊</span>我的统计<span class="mi-ar">›</span></button>
+      <button class="menu-it" onclick="navigateTo('categories')"><span class="mi-ic">🏷️</span>分类管理<span class="mi-ar">›</span></button>
+      <button class="menu-it" onclick="navigateTo('settings')"><span class="mi-ic">⚙️</span>设置<span class="mi-ar">›</span></button>
     </div>
   </div>
   <div class="tab-bar">
@@ -493,45 +462,45 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
 
 <!-- Settings -->
 <div class="page" id="page-settings">
-  <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+  <div class="st-bar"><span>9:41</span><span>📶 🔋</span></div>
   <div class="header"><button class="header-back" onclick="goBack()">←</button><span class="header-title">设置</span><span style="width:32px"></span></div>
   <div class="page-content">
     <div style="padding-top:12px"></div>
-    <div class="settings-group">
-      <div class="settings-item"><div class="si-left"><span class="mi-icon">🔒</span>账户安全</div><div class="si-right"><span>已开启</span><span style="font-size:14px;color:var(--text3)">›</span></div></div>
-      <div class="settings-item"><div class="si-left"><span class="mi-icon">🔔</span>消息通知</div><button class="toggle on" onclick="this.classList.toggle('on')"></button></div>
-      <div class="settings-item"><div class="si-left"><span class="mi-icon">💰</span>默认货币</div><div class="si-right"><span>人民币 (¥)</span><span style="font-size:14px;color:var(--text3)">›</span></div></div>
-      <div class="settings-item"><div class="si-left"><span class="mi-icon">🌙</span>深色模式</div><button class="toggle" onclick="this.classList.toggle('on')"></button></div>
+    <div class="set-grp">
+      <div class="set-it"><div class="si-l"><span style="font-size:18px">🔒</span>账户安全</div><div class="si-r"><span>已开启</span><span>›</span></div></div>
+      <div class="set-it"><div class="si-l"><span style="font-size:18px">🔔</span>消息通知</div><button class="toggle on" onclick="this.classList.toggle('on')"></button></div>
+      <div class="set-it"><div class="si-l"><span style="font-size:18px">💰</span>默认货币</div><div class="si-r"><span>人民币 (¥)</span><span>›</span></div></div>
+      <div class="set-it"><div class="si-l"><span style="font-size:18px">🌙</span>深色模式</div><button class="toggle" onclick="this.classList.toggle('on')"></button></div>
     </div>
-    <div class="settings-group">
-      <div class="settings-item"><div class="si-left"><span class="mi-icon">📤</span>导出数据</div><div class="si-right"><span style="font-size:14px;color:var(--text3)">›</span></div></div>
-      <div class="settings-item"><div class="si-left"><span class="mi-icon">🔄</span>数据同步</div><div class="si-right"><span>已同步</span><span style="font-size:14px;color:var(--text3)">›</span></div></div>
-      <div class="settings-item"><div class="si-left"><span class="mi-icon">ℹ️</span>关于小账本</div><div class="si-right"><span>v1.0.0</span><span style="font-size:14px;color:var(--text3)">›</span></div></div>
+    <div class="set-grp">
+      <div class="set-it"><div class="si-l"><span style="font-size:18px">📤</span>导出数据</div><div class="si-r"><span>›</span></div></div>
+      <div class="set-it"><div class="si-l"><span style="font-size:18px">🔄</span>数据同步</div><div class="si-r"><span>已同步</span><span>›</span></div></div>
+      <div class="set-it"><div class="si-l"><span style="font-size:18px">ℹ️</span>关于小账本</div><div class="si-r"><span>v1.0.0</span><span>›</span></div></div>
     </div>
     <button class="logout-btn" onclick="showLogoutModal()">退出登录</button>
   </div>
 </div>
 
-<!-- Category Management -->
+<!-- Category Edit -->
 <div class="page" id="page-categories">
-  <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+  <div class="st-bar"><span>9:41</span><span>📶 🔋</span></div>
   <div class="header"><button class="header-back" onclick="goBack()">←</button><span class="header-title">分类管理</span><button class="header-right">+ 添加</button></div>
   <div class="page-content">
     <div style="padding:12px 16px 4px"><span class="input-label" style="font-size:14px">支出分类</span></div>
-    <div id="category-edit-list"></div>
+    <div id="cat-edit-list"></div>
   </div>
 </div>
 
-</div><!-- /pages-container -->
+</div><!-- /pages -->
 
-<!-- Logout Modal -->
-<div class="modal-overlay" id="logout-modal">
+<!-- Modal -->
+<div class="modal-overlay" id="modal">
   <div class="modal-box">
-    <div class="modal-title">确认退出</div>
-    <div class="modal-desc">退出后将返回登录页面，确定要退出吗？</div>
-    <div class="modal-actions">
-      <button class="modal-cancel" onclick="hideLogoutModal()">取消</button>
-      <button class="modal-confirm" onclick="handleLogout()">退出</button>
+    <div class="modal-title" id="modal-title">确认退出</div>
+    <div class="modal-desc" id="modal-desc">退出后将返回登录页面，确定要退出吗？</div>
+    <div class="modal-actions" id="modal-actions">
+      <button class="modal-cancel" onclick="hideModal()">取消</button>
+      <button class="modal-out" onclick="handleLogout()">退出</button>
     </div>
   </div>
 </div>
@@ -543,10 +512,10 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
 // ==================== DATA ====================
 var nextId = 100;
 var txData = [
-  {id:1,type:'expense',cat:'日用',icon:'🛒',name:'超市购物',amount:82.50,date:'2026-05-14',note:'沃尔玛采购'},
+  {id:1,type:'expense',cat:'餐饮',icon:'🍕',name:'超市购物',amount:82.50,date:'2026-05-14',note:'沃尔玛采购'},
   {id:2,type:'income',cat:'薪资',icon:'💰',name:'工资到账',amount:4280.00,date:'2026-05-13',note:'5月工资'},
   {id:3,type:'expense',cat:'餐饮',icon:'☕',name:'星巴克咖啡',amount:35.00,date:'2026-05-12',note:''},
-  {id:4,type:'income',cat:'自由职业',icon:'💻',name:'兼职项目',amount:850.00,date:'2026-05-12',note:'UI设计项目尾款'},
+  {id:4,type:'income',cat:'自由职业',icon:'💻',name:'兼职项目',amount:850.00,date:'2026-05-12',note:'UI设计尾款'},
   {id:5,type:'expense',cat:'餐饮',icon:'🍕',name:'外卖订单',amount:42.00,date:'2026-05-11',note:'晚餐'},
   {id:6,type:'expense',cat:'交通',icon:'🚗',name:'打车费用',amount:28.00,date:'2026-05-11',note:'去客户公司'},
   {id:7,type:'expense',cat:'日用',icon:'🛒',name:'日用品',amount:128.00,date:'2026-05-10',note:'超市'},
@@ -570,7 +539,7 @@ var txData = [
   {id:25,type:'expense',cat:'餐饮',icon:'🍕',name:'奶茶',amount:18.00,date:'2026-04-08',note:'喜茶'},
   {id:26,type:'expense',cat:'娱乐',icon:'🎮',name:'KTV',amount:128.00,date:'2026-04-06',note:''},
   {id:27,type:'income',cat:'自由职业',icon:'💻',name:'设计外包',amount:1200.00,date:'2026-04-02',note:'Logo设计'},
-  {id:28,type:'expense',cat:'住房',icon:'🏠',name:'水电费',amount:215.00,date:'2026-04-01',note:''},
+  {id:28,type:'expense',cat:'住房',icon:'🏠',name:'水电费',amount:215.60,date:'2026-04-01',note:''},
   {id:29,type:'expense',cat:'日用',icon:'🛒',name:'洗衣粉',amount:25.90,date:'2026-03-28',note:''},
   {id:30,type:'income',cat:'薪资',icon:'💰',name:'3月工资',amount:4200.00,date:'2026-03-15',note:''},
   {id:31,type:'expense',cat:'餐饮',icon:'🍜',name:'早餐',amount:12.00,date:'2026-03-20',note:'包子豆浆'},
@@ -579,631 +548,308 @@ var txData = [
   {id:34,type:'expense',cat:'服饰',icon:'👕',name:'帽子',amount:79.00,date:'2026-03-08',note:'三福'},
   {id:35,type:'expense',cat:'餐饮',icon:'🍕',name:'烧烤外卖',amount:68.00,date:'2026-03-05',note:'夜宵'},
 ];
-
 var categories = {
   expense: [
-    {name:'餐饮',icon:'🍕',color:'#FEF3C7'},
-    {name:'日用',icon:'🛒',color:'#DBEAFE'},
-    {name:'交通',icon:'🚗',color:'#E0E7FF'},
-    {name:'娱乐',icon:'🎮',color:'#FCE7F3'},
-    {name:'服饰',icon:'👕',color:'#FEF3C7'},
-    {name:'住房',icon:'🏠',color:'#E0F2FE'},
-    {name:'医疗',icon:'🏥',color:'#FEE2E2'},
-    {name:'教育',icon:'📚',color:'#F3E8FF'},
-    {name:'通讯',icon:'📱',color:'#E0F2FE'},
-    {name:'其他',icon:'📦',color:'#F1F5F9'},
+    {name:'餐饮',icon:'🍕',color:'#FEF3C7'},{name:'日用',icon:'🛒',color:'#DBEAFE'},
+    {name:'交通',icon:'🚗',color:'#E0E7FF'},{name:'娱乐',icon:'🎮',color:'#FCE7F3'},
+    {name:'服饰',icon:'👕',color:'#FEF3C7'},{name:'住房',icon:'🏠',color:'#E0F2FE'},
+    {name:'医疗',icon:'🏥',color:'#FEE2E2'},{name:'教育',icon:'📚',color:'#F3E8FF'},
+    {name:'通讯',icon:'📱',color:'#E0F2FE'},{name:'其他',icon:'📦',color:'#F1F5F9'},
   ],
   income: [
-    {name:'薪资',icon:'💰',color:'#D1FAE5'},
-    {name:'自由职业',icon:'💻',color:'#DBEAFE'},
-    {name:'投资',icon:'📈',color:'#E0E7FF'},
-    {name:'兼职',icon:'📝',color:'#FEF3C7'},
-    {name:'红包',icon:'🧧',color:'#FCE7F3'},
-    {name:'其他',icon:'📦',color:'#F1F5F9'},
+    {name:'薪资',icon:'💰',color:'#D1FAE5'},{name:'自由职业',icon:'💻',color:'#DBEAFE'},
+    {name:'投资',icon:'📈',color:'#E0E7FF'},{name:'兼职',icon:'📝',color:'#FEF3C7'},
+    {name:'红包',icon:'🧧',color:'#FCE7F3'},{name:'其他',icon:'📦',color:'#F1F5F9'},
   ]
 };
 
 // ==================== STATE ====================
-var addType = 'income';
-var currentTxFilter = 'all';
-var currentTxCat = 'all';
-var statsPeriod = 'month'; // 'month' | 'year'
-var statsCursor = new Date(2026, 4); // for month view: year+month. for year view: year
-var selectedCat = null;
-var addAmount = 0;
+var addType = 'expense';
+var curTxFilter = 'all';
+var curTxCat = 'all';
+var statsPeriod = 'month';
+var statsDate = new Date(2026, 4);
+var selCat = null;
+var addAmt = 0;
 var pageStack = ['login'];
 var transitioning = false;
 var txDelMode = false;
 var TRANSITION_MS = 340;
 
 // ==================== ROUTING ====================
-function navigateTo(page) {
-  if (transitioning) return;
-  pageStack.push(page);
-  showPage(page, { dir:'forward' });
+function navigateTo(p) { if(transitioning)return; pageStack.push(p); showPage(p,{dir:'forward'}); }
+function goBack() { if(transitioning)return; if(pageStack.length>1){pageStack.pop();showPage(pageStack[pageStack.length-1],{dir:'back'});} }
+function showPage(p,opts) {
+  opts=opts||{}; var old=document.querySelector('.page.active'); var el=document.getElementById('page-'+p);
+  if(!el)return;
+  if(['home','transactions','stats','profile'].includes(p)){if(old)old.classList.remove('active');el.classList.add('active');pageStack=[p];updateTab(p);renderPage(p);return;}
+  if(p==='home'){if(old)old.classList.remove('active');el.classList.add('active');updateTab('home');renderPage('home');return;}
+  if(!opts.dir||opts.dir==='forward')animFwd(old,el);else animBack(old,el);renderPage(p);
 }
-function goBack() {
-  if (transitioning) return;
-  if (pageStack.length > 1) { pageStack.pop(); showPage(pageStack[pageStack.length-1], { dir:'back' }); }
-}
-function showPage(page, opts) {
-  opts = opts || {};
-  var oldEl = document.querySelector('.page.active');
-  var newEl = document.getElementById('page-'+page);
-  if (!newEl) return;
-  if (['home','transactions','stats','profile'].includes(page) && page !== pageStack[pageStack.length-1]) {
-    if (oldEl) oldEl.classList.remove('active');
-    newEl.classList.add('active');
-    pageStack = [page];
-    updateTabBar(page);
-    renderPage(page);
-    return;
-  }
-  if (['home','transactions','stats','profile'].includes(page)) {
-    if (oldEl) oldEl.classList.remove('active');
-    newEl.classList.add('active');
-    pageStack = [page];
-    updateTabBar(page);
-    renderPage(page);
-    return;
-  }
-  if (page === 'home') {
-    if (oldEl) oldEl.classList.remove('active');
-    newEl.classList.add('active');
-    updateTabBar('home');
-    renderPage('home');
-    return;
-  }
-  if (!opts.dir || opts.dir === 'forward') animateForward(oldEl, newEl);
-  else animateBack(oldEl, newEl);
-  renderPage(page);
-}
-function renderPage(page) {
-  switch(page) {
-    case 'home': updateHomeStats(); renderHomeTx(); break;
-    case 'transactions': renderCatFilters(); renderTxList(); break;
-    case 'add': resetAddForm(); break;
-    case 'detail': renderDetail(); break;
-    case 'stats': renderStats(); break;
-    case 'categories': renderCategoryEdit(); break;
+function renderPage(p) {
+  switch(p){
+    case'home':updateHomeStats();renderHomeTx();break;
+    case'transactions':renderCatFilters();renderTxList();break;
+    case'add':resetForm();break;
+    case'detail':renderDetail();break;
+    case'stats':renderStats();break;
+    case'categories':renderCatEdit();break;
   }
 }
-function animateForward(oldEl, newEl) {
-  transitioning = true;
-  newEl.classList.add('anim');
-  newEl.style.transform = 'translateX(100%)';
-  newEl.style.opacity = '1';
-  newEl.style.display = 'flex';
-  newEl.style.pointerEvents = 'auto';
-  void newEl.offsetHeight;
-  if (oldEl) { oldEl.style.transform = 'translateX(-18%)'; oldEl.style.opacity = '0.5'; }
-  newEl.style.transform = 'translateX(0)';
-  newEl.style.opacity = '1';
-  setTimeout(function() {
-    if (oldEl) { oldEl.style.transform = ''; oldEl.style.opacity = ''; oldEl.style.display = ''; oldEl.style.pointerEvents = ''; oldEl.classList.remove('active','anim'); }
-    newEl.classList.add('active'); newEl.style.transform = ''; newEl.style.opacity = ''; newEl.style.pointerEvents = ''; newEl.classList.remove('anim');
-    transitioning = false;
-  }, TRANSITION_MS);
+function animFwd(old,el) {
+  transitioning=true;el.classList.add('anim');
+  el.style.transform='translateX(100%)';el.style.opacity='1';el.style.display='flex';el.style.pointerEvents='auto';
+  void el.offsetHeight;
+  if(old){old.style.transform='translateX(-18%)';old.style.opacity='0.5';}
+  el.style.transform='translateX(0)';
+  setTimeout(function(){
+    if(old){old.style.transform='';old.style.opacity='';old.style.display='';old.style.pointerEvents='';old.classList.remove('active','anim');}
+    el.classList.add('active');el.style.transform='';el.style.opacity='';el.style.pointerEvents='';el.classList.remove('anim');
+    transitioning=false;
+  },TRANSITION_MS);
 }
-function animateBack(oldEl, newEl) {
-  transitioning = true;
-  newEl.classList.add('anim');
-  newEl.style.transform = 'translateX(-18%)';
-  newEl.style.opacity = '0.5';
-  newEl.style.display = 'flex';
-  newEl.style.pointerEvents = 'none';
-  void newEl.offsetHeight;
-  if (oldEl) { oldEl.style.transform = 'translateX(100%)'; oldEl.style.opacity = '0'; }
-  newEl.style.transform = 'translateX(0)'; newEl.style.opacity = '1';
-  setTimeout(function() {
-    if (oldEl) { oldEl.style.transform = ''; oldEl.style.opacity = ''; oldEl.style.display = ''; oldEl.style.pointerEvents = ''; oldEl.classList.remove('active','anim'); }
-    newEl.classList.add('active'); newEl.style.transform = ''; newEl.style.opacity = ''; newEl.style.pointerEvents = ''; newEl.classList.remove('anim');
-    transitioning = false;
-  }, TRANSITION_MS);
+function animBack(old,el) {
+  transitioning=true;el.classList.add('anim');
+  el.style.transform='translateX(-18%)';el.style.opacity='0.5';el.style.display='flex';el.style.pointerEvents='none';
+  void el.offsetHeight;
+  if(old){old.style.transform='translateX(100%)';old.style.opacity='0';}
+  el.style.transform='translateX(0)';el.style.opacity='1';
+  setTimeout(function(){
+    if(old){old.style.transform='';old.style.opacity='';old.style.display='';old.style.pointerEvents='';old.classList.remove('active','anim');}
+    el.classList.add('active');el.style.transform='';el.style.opacity='';el.style.pointerEvents='';el.classList.remove('anim');
+    transitioning=false;
+  },TRANSITION_MS);
 }
-function updateTabBar(page) {
-  var map = {home:0,transactions:1,stats:2,profile:3};
-  document.querySelectorAll('.tab-item').forEach(function(t,i) { t.classList.toggle('active', i===map[page]); });
-}
+function updateTab(p){var m={home:0,transactions:1,stats:2,profile:3};document.querySelectorAll('.tab-item').forEach(function(t,i){t.classList.toggle('active',i===m[p]);});}
 
 // ==================== AUTH ====================
-function switchAuthTab(idx) {
-  document.querySelectorAll('.auth-tab').forEach(function(t,i) { t.classList.toggle('active', i===idx); });
-  document.getElementById('login-password').style.display = idx===0?'block':'none';
-  document.getElementById('login-code').style.display = idx===1?'block':'none';
+function switchAuthTab(i){document.querySelectorAll('.auth-tab').forEach(function(t,j){t.classList.toggle('active',j===i);});document.getElementById('login-password').style.display=i===0?'block':'none';document.getElementById('login-code').style.display=i===1?'block':'none';}
+function sendCode(b){var s=60;b.disabled=true;b.style.opacity='.5';b.textContent=s+'s';var t=setInterval(function(){s--;b.textContent=s+'s';if(s<=0){clearInterval(t);b.disabled=false;b.style.opacity='1';b.textContent='获取验证码';}},1000);}
+function handleLogin(b){if(b){b.textContent='登录中...';b.classList.add('loading');}setTimeout(function(){pageStack=['home'];showPage('home');},350);}
+function handleLogout(){hideModal();pageStack=['login'];document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');p.style.transform='';p.style.opacity='';p.style.display='';p.style.pointerEvents='';});document.getElementById('page-login').classList.add('active');}
+function showModal(){document.getElementById('modal').classList.add('show');}
+function hideModal(){document.getElementById('modal').classList.remove('show');}
+function showLogoutModal(){
+  document.getElementById('modal-title').textContent='确认退出';
+  document.getElementById('modal-desc').textContent='退出后将返回登录页面，确定要退出吗？';
+  document.getElementById('modal-actions').innerHTML='<button class="modal-cancel" onclick="hideModal()">取消</button><button class="modal-out" onclick="handleLogout()">退出</button>';
+  showModal();
 }
-function sendCode(btn) {
-  var sec = 60; btn.disabled = true; btn.style.opacity = '.5'; btn.textContent = sec + 's';
-  var timer = setInterval(function() {
-    sec--; btn.textContent = sec + 's';
-    if (sec<=0) { clearInterval(timer); btn.disabled = false; btn.style.opacity = '1'; btn.textContent = '获取验证码'; }
-  }, 1000);
-}
-function handleLogin(btn) {
-  if (btn) { btn.textContent = '登录中...'; btn.classList.add('loading'); }
-  setTimeout(function() { pageStack = ['home']; showPage('home'); }, 350);
-}
-function handleLogout() {
-  hideLogoutModal();
-  pageStack = ['login'];
-  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); p.style.transform = ''; p.style.opacity = ''; p.style.display = ''; p.style.pointerEvents = ''; });
-  document.getElementById('page-login').classList.add('active');
-}
-function showLogoutModal() { document.getElementById('logout-modal').classList.add('show'); }
-function hideLogoutModal() { document.getElementById('logout-modal').classList.remove('show'); }
-
-function showToast(msg) {
-  var t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(function() { t.classList.remove('show'); }, 2000);
-}
+function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2000);}
 
 // ==================== HOME ====================
-function updateHomeStats() {
-  var now = new Date(2026, 4);
-  var y = now.getFullYear(), m = now.getMonth();
-  var inc = 0, exp = 0;
-  txData.forEach(function(t) {
-    var d = new Date(t.date);
-    if (d.getFullYear()===y && d.getMonth()===m) {
-      if (t.type==='income') inc += t.amount; else exp += t.amount;
-    }
-  });
-  document.getElementById('home-income').textContent = '¥' + inc.toFixed(2);
-  document.getElementById('home-expense').textContent = '¥' + exp.toFixed(2);
-  document.getElementById('home-balance').textContent = '¥' + (inc - exp).toFixed(2);
+function updateHomeStats(){
+  var d=new Date(2026,4),y=d.getFullYear(),m=d.getMonth(),inc=0,exp=0;
+  txData.forEach(function(t){var d2=new Date(t.date);if(d2.getFullYear()===y&&d2.getMonth()===m){if(t.type==='income')inc+=t.amount;else exp+=t.amount;}});
+  document.getElementById('home-inc').textContent='¥'+inc.toFixed(2);
+  document.getElementById('home-exp').textContent='¥'+exp.toFixed(2);
+  document.getElementById('home-bal').textContent='¥'+(inc-exp).toFixed(2);
 }
-
-function renderHomeTx() {
-  var container = document.getElementById('home-tx-list');
-  var recent = [...txData].sort(function(a,b) { return b.id - a.id; }).slice(0,5);
-  container.innerHTML = recent.map(function(t) { return renderTxItem(t); }).join('');
-}
+function renderHomeTx(){var c=document.getElementById('home-tx-list');c.innerHTML=[...txData].sort(function(a,b){return b.id-a.id;}).slice(0,5).map(function(t){return txItem(t);}).join('');}
 
 // ==================== TRANSACTIONS ====================
-function renderCatFilters() {
-  var container = document.getElementById('tx-cat-filters');
-  var cats = {};
-  txData.forEach(function(t) { cats[t.cat] = true; });
-  var names = Object.keys(cats).sort();
-  var html = '<button class="filter-cat active" data-cat="all" onclick="filterTxCat(\'all\',this)">全部</button>';
-  names.forEach(function(n) { html += '<button class="filter-cat" data-cat="' + n + '" onclick="filterTxCat(\'' + n + '\',this)">' + n + '</button>'; });
-  container.innerHTML = html;
+function renderCatFilters(){
+  var c=document.getElementById('tx-cat-filters'),cats={};txData.forEach(function(t){cats[t.cat]=true;});
+  var html='<button class="fltr-cat active" onclick="filterTxCat(\'all\',this)">全部</button>';
+  Object.keys(cats).sort().forEach(function(n){html+='<button class="fltr-cat" onclick="filterTxCat(\''+n+'\',this)">'+n+'</button>';});
+  c.innerHTML=html;
 }
-
-function filterTx(filter, btn) {
-  currentTxFilter = filter;
-  document.querySelectorAll('#tx-type-filters .filter-tab').forEach(function(t) { t.classList.remove('active'); });
-  btn.classList.add('active');
-  renderTxList();
+function filterTx(f,b){curTxFilter=f;document.querySelectorAll('#tx-type-filters .fltr-tab').forEach(function(t){t.classList.remove('active');});b.classList.add('active');renderTxList();}
+function filterTxCat(c,b){curTxCat=c;document.querySelectorAll('#tx-cat-filters .fltr-cat').forEach(function(t){t.classList.remove('active');});b.classList.add('active');renderTxList();}
+function toggleTxDelMode(){txDelMode=!txDelMode;document.querySelectorAll('.tx-it').forEach(function(e){e.classList.toggle('show-del',txDelMode);});}
+function delTxItem(id){var i=txData.findIndex(function(t){return t.id===id;});if(i!==-1)txData.splice(i,1);renderTxList();toast('已删除');}
+function renderTxList(){
+  var c=document.getElementById('tx-list'),filtered=txData;
+  if(curTxFilter!=='all')filtered=filtered.filter(function(t){return t.type===curTxFilter;});
+  if(curTxCat!=='all')filtered=filtered.filter(function(t){return t.cat===curTxCat;});
+  filtered=[...filtered].sort(function(a,b){return new Date(b.date)-new Date(a.date);});
+  var groups={};filtered.forEach(function(t){var l=dateGroup(t.date);if(!groups[l])groups[l]=[];groups[l].push(t);});
+  var html='';Object.entries(groups).forEach(function(e){html+='<div class="dt-hdr">'+e[0]+'</div>';e[1].forEach(function(t){html+=txItem(t,true);});});
+  c.innerHTML=html||'<div class="empty-s"><div class="empty-ic">📭</div><div class="empty-t">暂无记录</div></div>';
 }
-function filterTxCat(cat, btn) {
-  currentTxCat = cat;
-  document.querySelectorAll('#tx-cat-filters .filter-cat').forEach(function(t) { t.classList.remove('active'); });
-  btn.classList.add('active');
-  renderTxList();
+function txItem(t,sd){
+  var del=sd?'<button class="tx-del" onclick="event.stopPropagation();delTxItem('+t.id+')">✕</button>':'';
+  return '<div class="tx-it '+t.type+(txDelMode&&sd?' show-del':'')+'" onclick="viewDetail('+t.id+')">'+
+    '<div class="tx-ic" style="background:'+(t.type==='income'?'#D1FAE5':'#FEF3C7')+'">'+t.icon+'</div>'+
+    '<div class="tx-info"><div class="tx-name">'+t.name+'</div><div class="tx-cat">'+t.cat+'</div></div>'+
+    '<div class="tx-amt '+t.type+'">'+(t.type==='income'?'+':'-')+'¥'+t.amount.toFixed(2)+'</div>'+del+'</div>';
 }
+function dateGroup(d){if(d==='2026-05-14')return'今天';if(d==='2026-05-13')return'昨天';var n=new Date(d);return(n.getMonth()+1)+'月'+n.getDate()+'日';}
 
-function toggleTxDelMode() {
-  txDelMode = !txDelMode;
-  document.querySelectorAll('.tx-item').forEach(function(el) { el.classList.toggle('show-del', txDelMode); });
+// ==================== ADD ====================
+function resetForm(){addAmt=0;selCat=null;document.getElementById('add-amt-display').textContent='¥0.00';document.getElementById('add-amt-display').className='amt-val';document.getElementById('add-note').value='';setAddType('expense');updateOk();}
+function setAddType(t){addType=t;selCat=null;document.getElementById('add-type-inc').className='add-type-btn'+(t==='income'?' active':'');document.getElementById('add-type-exp').className='add-type-btn'+(t==='expense'?' active':'');document.getElementById('add-amt-display').className='amt-val '+t;renderCats();}
+function npInput(v){
+  var s=String(addAmt);
+  if(s.includes('.')&&v==='.')return;
+  if(s.includes('.')&&s.split('.')[1].length>=2)return;
+  if(v==='.'){addAmt=parseFloat(s+'.');updateAmt();return;}
+  if(s==='0'){addAmt=parseInt(v);updateAmt();return;}
+  if(v==='00'){addAmt=parseFloat(s+'00');updateAmt();return;}
+  addAmt=parseFloat(s+v);updateAmt();
 }
-
-function deleteTxItem(id) {
-  var idx = txData.findIndex(function(t) { return t.id === id; });
-  if (idx !== -1) txData.splice(idx, 1);
-  renderTxList();
-  showToast('已删除');
-}
-
-function renderTxList() {
-  var container = document.getElementById('tx-list');
-  var filtered = txData;
-  if (currentTxFilter !== 'all') filtered = filtered.filter(function(t) { return t.type === currentTxFilter; });
-  if (currentTxCat !== 'all') filtered = filtered.filter(function(t) { return t.cat === currentTxCat; });
-  filtered = [...filtered].sort(function(a,b) { return new Date(b.date) - new Date(a.date); });
-  var groups = {};
-  filtered.forEach(function(t) {
-    var label = formatDateGroup(t.date);
-    if (!groups[label]) groups[label] = [];
-    groups[label].push(t);
-  });
-  var html = '';
-  Object.entries(groups).forEach(function(entry) {
-    var label = entry[0], items = entry[1];
-    html += '<div class="date-header">' + label + '</div>';
-    items.forEach(function(t) { html += renderTxItem(t, true); });
-  });
-  container.innerHTML = html || '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">暂无记录</div></div>';
-}
-
-function renderTxItem(t, showDel) {
-  var delBtn = showDel ? '<button class="tx-del" onclick="event.stopPropagation();deleteTxItem(' + t.id + ')">✕</button>' : '';
-  return '<div class="tx-item' + (txDelMode&&showDel?' show-del':'') + '" onclick="viewDetail(' + t.id + ')">' +
-    '<div class="tx-icon" style="background:' + (t.type==='income'?'#D1FAE5':'#FEF3C7') + '">' + t.icon + '</div>' +
-    '<div class="tx-info"><div class="tx-name">' + t.name + '</div><div class="tx-cat">' + t.cat + '</div></div>' +
-    '<div class="tx-amount ' + t.type + '">' + (t.type==='income'?'+':'-') + '¥' + t.amount.toFixed(2) + '</div>' + delBtn + '</div>';
-}
-
-function formatDateGroup(dateStr) {
-  if (dateStr === '2026-05-14') return '今天';
-  if (dateStr === '2026-05-13') return '昨天';
-  var d = new Date(dateStr);
-  return (d.getMonth()+1) + '月' + d.getDate() + '日';
-}
-
-// ==================== ADD TRANSACTION ====================
-function resetAddForm() {
-  addAmount = 0;
-  selectedCat = null;
-  document.getElementById('add-amount-display').textContent = '¥0.00';
-  document.getElementById('add-amount-display').className = 'value';
-  document.getElementById('add-note').value = '';
-  // Reset type
-  addType = 'expense';
-  document.getElementById('add-type-inc').className = 'add-type-btn';
-  document.getElementById('add-type-exp').className = 'add-type-btn active';
-  renderCategories();
-  updateNumpadConfirm();
-}
-
-function setAddType(type) {
-  addType = type;
-  selectedCat = null;
-  document.getElementById('add-type-inc').className = 'add-type-btn' + (type==='income'?' active':'');
-  document.getElementById('add-type-exp').className = 'add-type-btn' + (type==='expense'?' active':'');
-  document.getElementById('add-amount-display').className = 'value ' + type;
-  renderCategories();
-}
-
-function numpadInput(v) {
-  if (v === '00' && addAmount === 0) return;
-  var s = addAmount.toString();
-  if (s.includes('.') && v === '.') return;
-  if (v === '.' && s === '') { addAmount = 0; updateAmountDisplay(); return; }
-  if (v === '.' && !s.includes('.')) return; // handled below
-
-  addAmount = parseFloat(s + v) || 0;
-  // handle decimal
-  if (v === '.') addAmount = parseFloat((addAmount || 0) + '.');
-  updateAmountDisplay();
-}
-
-function numpadInput(v) {
-  if (addAmount.toString().includes('.') && v === '.') return;
-  if (addAmount.toString().includes('.') && addAmount.toString().split('.')[1].length >= 2) return;
-  var s = String(addAmount);
-  if (s === '0' && v !== '.') { addAmount = parseInt(v); updateAmountDisplay(); return; }
-  if (v === '.') { addAmount = parseFloat(s + '.'); updateAmountDisplay(); return; }
-  addAmount = parseFloat(s + v);
-  updateAmountDisplay();
-}
-
-function numpadBack() {
-  var s = String(addAmount);
-  if (s.length <= 1) { addAmount = 0; updateAmountDisplay(); return; }
-  addAmount = parseFloat(s.slice(0, -1));
-  updateAmountDisplay();
-}
-
-function numpadClear() { addAmount = 0; updateAmountDisplay(); }
-
-function updateAmountDisplay() {
-  document.getElementById('add-amount-display').textContent = '¥' + addAmount.toFixed(2);
-  updateNumpadConfirm();
-}
-
-function updateNumpadConfirm() {
-  document.getElementById('numpad-confirm').classList.toggle('disabled', addAmount <= 0);
-}
-
-function renderCategories() {
-  var grid = document.getElementById('category-grid');
-  grid.innerHTML = (categories[addType]||[]).map(function(c) {
-    return '<button class="cat-item" data-cat="' + c.name + '" onclick="selectCat(\'' + c.name + '\',this)">' +
-      '<div class="cat-icon" style="background:' + c.color + '">' + c.icon + '</div><div class="cat-name">' + c.name + '</div></button>';
-  }).join('');
-}
-
-function selectCat(name, btn) {
-  selectedCat = name;
-  document.querySelectorAll('.cat-item').forEach(function(c) { c.style.background = ''; });
-  if (btn) btn.style.background = '#D1FAE5';
-}
-
-function saveTransaction() {
-  if (addAmount <= 0) { showToast('请输入金额'); return; }
-  if (!selectedCat) { showToast('请选择分类'); return; }
-  var note = document.getElementById('add-note').value || '';
-  var catInfo = (categories[addType]||[]).find(function(c) { return c.name === selectedCat; }) || {icon:'📦'};
-  var d = new Date(2026, 4, 14);
-  var dateStr = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-  txData.push({
-    id: nextId++,
-    type: addType,
-    cat: selectedCat,
-    icon: catInfo.icon,
-    name: note || selectedCat + (addType==='income'?'收入':'支出'),
-    amount: addAmount,
-    date: dateStr,
-    note: note
-  });
-  showToast('保存成功 ✓');
-  goBack();
+function npBack(){var s=String(addAmt);if(s.length<=1||(s.length===2&&s[0]==='-')){addAmt=0;updateAmt();return;}addAmt=parseFloat(s.slice(0,-1))||0;updateAmt();}
+function npClear(){addAmt=0;updateAmt();}
+function updateAmt(){document.getElementById('add-amt-display').textContent='¥'+addAmt.toFixed(2);updateOk();}
+function updateOk(){document.getElementById('np-ok').classList.toggle('disabled',addAmt<=0);}
+function renderCats(){var g=document.getElementById('cat-grid');g.innerHTML=(categories[addType]||[]).map(function(c){return'<button class="cat-it" onclick="selCatAction(\''+c.name+'\',this)"><div class="cat-ic" style="background:'+c.color+'">'+c.icon+'</div><div class="cat-nm">'+c.name+'</div></button>';}).join('');}
+function selCatAction(n,b){selCat=n;document.querySelectorAll('.cat-it').forEach(function(c){c.style.background='';});if(b)b.style.background='#EEF2FF';}
+function saveTransaction(){
+  if(addAmt<=0){toast('请输入金额');return;}
+  if(!selCat){toast('请选择分类');return;}
+  var note=document.getElementById('add-note').value||'';
+  var ci=(categories[addType]||[]).find(function(c){return c.name===selCat;})||{icon:'📦'};
+  var d=new Date(2026,4,14);
+  txData.push({id:nextId++,type:addType,cat:selCat,icon:ci.icon,name:note||selCat+(addType==='income'?'收入':'支出'),amount:addAmt,date:d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'),note:note});
+  toast('保存成功 ✓');goBack();
 }
 
 // ==================== DETAIL ====================
-function viewDetail(id) {
-  window._detailId = id;
-  navigateTo('detail');
+function viewDetail(id){window._did=id;navigateTo('detail');}
+function renderDetail(){
+  var tx=txData.find(function(t){return t.id===window._did;});if(!tx)return;
+  var d=new Date(tx.date);
+  document.getElementById('detail-content').innerHTML=''+
+    '<div style="padding-top:8px"></div>'+
+    '<div class="dt-card"><div class="dt-ic" style="background:'+(tx.type==='income'?'#D1FAE5':'#FEF3C7')+'">'+tx.icon+'</div>'+
+    '<div class="dt-amt" style="color:'+(tx.type==='income'?'var(--income)':'var(--expense)')+'">'+(tx.type==='income'?'+':'-')+'¥'+tx.amount.toFixed(2)+'</div>'+
+    '<div class="dt-nm">'+tx.name+'</div><div class="dt-sub">'+tx.cat+' · '+(tx.type==='income'?'收入':'支出')+'</div></div>'+
+    '<div class="dt-info">'+
+    '<div class="dt-row"><span class="lb">分类</span><span class="vl">'+tx.cat+'</span></div>'+
+    '<div class="dt-row"><span class="lb">日期</span><span class="vl">'+d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日</span></div>'+
+    '<div class="dt-row"><span class="lb">备注</span><span class="vl">'+(tx.note||'无')+'</span></div></div>'+
+    '<div class="dt-acts"><button class="btn-del" onclick="confirmDel('+tx.id+')">删除</button>'+
+    '<button class="btn-back" onclick="goBack()">返回</button></div>';
 }
-
-function renderDetail() {
-  var id = window._detailId;
-  var tx = txData.find(function(t) { return t.id === id; });
-  if (!tx) return;
-  var container = document.getElementById('detail-content');
-  var date = new Date(tx.date);
-  var dateStr = date.getFullYear() + '年' + (date.getMonth()+1) + '月' + date.getDate() + '日';
-  container.innerHTML = '' +
-    '<div style="padding-top:8px"></div>' +
-    '<div class="detail-card">' +
-      '<div class="d-icon" style="background:' + (tx.type==='income'?'#D1FAE5':'#FEF3C7') + '">' + tx.icon + '</div>' +
-      '<div class="d-amount" style="color:' + (tx.type==='income'?'var(--income)':'var(--expense)') + '">' + (tx.type==='income'?'+':'-') + '¥' + tx.amount.toFixed(2) + '</div>' +
-      '<div class="d-name">' + tx.name + '</div><div class="d-cat">' + tx.cat + ' · ' + (tx.type==='income'?'收入':'支出') + '</div></div>' +
-    '<div class="detail-info">' +
-      '<div class="detail-row"><span class="label">分类</span><span class="value">' + tx.cat + '</span></div>' +
-      '<div class="detail-row"><span class="label">日期</span><span class="value">' + dateStr + '</span></div>' +
-      '<div class="detail-row"><span class="label">备注</span><span class="value">' + (tx.note || '无') + '</span></div>' +
-    '</div>' +
-    '<div class="detail-actions">' +
-      '<button class="btn-del" onclick="confirmDeleteTx(' + tx.id + ')">删除</button>' +
-      '<button class="btn-edit" onclick="goBack()">返回</button></div>';
+function confirmDel(id){
+  document.getElementById('modal-title').textContent='确认删除';
+  document.getElementById('modal-desc').textContent='确定要删除这笔记录吗？删除后不可恢复。';
+  document.getElementById('modal-actions').innerHTML='<button class="modal-cancel" onclick="hideModal()">取消</button><button class="modal-del" onclick="doDel('+id+')">删除</button>';
+  showModal();
 }
-
-function confirmDeleteTx(id) {
-  var modal = document.getElementById('logout-modal');
-  modal.querySelector('.modal-title').textContent = '确认删除';
-  modal.querySelector('.modal-desc').textContent = '确定要删除这笔记录吗？删除后不可恢复。';
-  modal.querySelector('.modal-confirm').textContent = '删除';
-  modal.querySelector('.modal-confirm').className = 'modal-confirm';
-  modal.querySelector('.modal-actions').innerHTML = '' +
-    '<button class="modal-cancel" onclick="hideLogoutModal()">取消</button>' +
-    '<button class="modal-confirm" onclick="doDeleteTx(' + id + ')">删除</button>';
-  modal.classList.add('show');
+function doDel(id){
+  hideModal();restoreModal();
+  var i=txData.findIndex(function(t){return t.id===id;});if(i!==-1)txData.splice(i,1);
+  toast('已删除');goBack();
 }
-
-function doDeleteTx(id) {
-  hideLogoutModal();
-  // Restore modal
-  var modal = document.getElementById('logout-modal');
-  modal.querySelector('.modal-title').textContent = '确认退出';
-  modal.querySelector('.modal-desc').textContent = '退出后将返回登录页面，确定要退出吗？';
-  modal.querySelector('.modal-confirm').textContent = '退出';
-  modal.querySelector('.modal-confirm').className = 'modal-confirm';
-  modal.querySelector('.modal-actions').innerHTML = '' +
-    '<button class="modal-cancel" onclick="hideLogoutModal()">取消</button>' +
-    '<button class="modal-confirm" onclick="handleLogout()">退出</button>';
-
-  var idx = txData.findIndex(function(t) { return t.id === id; });
-  if (idx !== -1) txData.splice(idx, 1);
-  showToast('已删除');
-  goBack();
+function restoreModal(){
+  document.getElementById('modal-title').textContent='确认退出';
+  document.getElementById('modal-desc').textContent='退出后将返回登录页面，确定要退出吗？';
+  document.getElementById('modal-actions').innerHTML='<button class="modal-cancel" onclick="hideModal()">取消</button><button class="modal-out" onclick="handleLogout()">退出</button>';
 }
 
 // ==================== STATISTICS ====================
-function setStatsPeriod(period, btn) {
-  statsPeriod = period;
-  document.querySelectorAll('.stats-period-btn').forEach(function(b) { b.classList.remove('active'); });
-  btn.classList.add('active');
-  if (period === 'year') {
-    statsCursor = new Date(2026, 0);
-    document.getElementById('stats-label').textContent = statsCursor.getFullYear() + '年';
-  } else {
-    statsCursor = new Date(2026, 4);
-    document.getElementById('stats-label').textContent = statsCursor.getFullYear() + '年' + (statsCursor.getMonth()+1) + '月';
-  }
-  renderStats();
+function setStatsPeriod(p,b){statsPeriod=p;document.querySelectorAll('.stats-p-btn').forEach(function(x){x.classList.remove('active');});b.classList.add('active');if(p==='year'){statsDate=new Date(2026,0);}else{statsDate=new Date(2026,4);}renderStats();}
+function statsNav(d){if(statsPeriod==='year')statsDate.setFullYear(statsDate.getFullYear()+d);else statsDate.setMonth(statsDate.getMonth()+d);renderStats();}
+function renderStats(){if(statsPeriod==='month'){document.getElementById('stats-lb').textContent=statsDate.getFullYear()+'年'+(statsDate.getMonth()+1)+'月';renderMonthStats();}else{document.getElementById('stats-lb').textContent=statsDate.getFullYear()+'年';renderYearStats();}}
+
+function renderMonthStats(){
+  var y=statsDate.getFullYear(),m=statsDate.getMonth(),inc=0,exp=0,incC={},expC={};
+  txData.forEach(function(t){var d2=new Date(t.date);if(d2.getFullYear()===y&&d2.getMonth()===m){if(t.type==='income'){inc+=t.amount;incC[t.cat]=(incC[t.cat]||0)+t.amount;}else{exp+=t.amount;expC[t.cat]=(expC[t.cat]||0)+t.amount;}}});
+  document.getElementById('stats-sum').innerHTML='<div class="sum-card"><div class="sc-lb">收入</div><div class="sc-amt income">¥'+inc.toFixed(2)+'</div></div><div class="sum-card"><div class="sc-lb">支出</div><div class="sc-amt expense">¥'+exp.toFixed(2)+'</div></div>';
+  renderExpBars(expC);drawChart(incC,expC,false);
 }
 
-function statsPrev() {
-  if (statsPeriod === 'year') { statsCursor.setFullYear(statsCursor.getFullYear() - 1); }
-  else { statsCursor.setMonth(statsCursor.getMonth() - 1); }
-  renderStats();
-}
-function statsNext() {
-  if (statsPeriod === 'year') { statsCursor.setFullYear(statsCursor.getFullYear() + 1); }
-  else { statsCursor.setMonth(statsCursor.getMonth() + 1); }
-  renderStats();
+function renderYearStats(){
+  var y=statsDate.getFullYear(),inc=0,exp=0,mI={},mE={};for(var i=0;i<12;i++){mI[i]=0;mE[i]=0;}
+  txData.forEach(function(t){var d2=new Date(t.date);if(d2.getFullYear()===y){if(t.type==='income'){inc+=t.amount;mI[d2.getMonth()]=(mI[d2.getMonth()]||0)+t.amount;}else{exp+=t.amount;mE[d2.getMonth()]=(mE[d2.getMonth()]||0)+t.amount;}}});
+  document.getElementById('stats-sum').innerHTML='<div class="sum-card"><div class="sc-lb">年收入</div><div class="sc-amt income">¥'+inc.toFixed(2)+'</div></div><div class="sum-card"><div class="sc-lb">年支出</div><div class="sc-amt expense">¥'+exp.toFixed(2)+'</div></div>';
+  var expC={};txData.forEach(function(t){var d2=new Date(t.date);if(d2.getFullYear()===y&&t.type==='expense')expC[t.cat]=(expC[t.cat]||0)+t.amount;});
+  renderExpBars(expC);drawChart(mI,mE,true);
 }
 
-function renderStats() {
-  var labelEl = document.getElementById('stats-label');
-  if (statsPeriod === 'month') {
-    labelEl.textContent = statsCursor.getFullYear() + '年' + (statsCursor.getMonth()+1) + '月';
-    renderMonthStats();
-  } else {
-    labelEl.textContent = statsCursor.getFullYear() + '年';
-    renderYearStats();
-  }
+function renderExpBars(expC){
+  var c=document.getElementById('stats-cat-list');
+  var sorted=Object.entries(expC).sort(function(a,b){return b[1]-a[1];}),max=sorted.length?sorted[0][1]:1;
+  var colors=['#F59E0B','#3B82F6','#6366F1','#EC4899','#EF4444','#8B5CF6','#06B6D4','#84CC16','#14B8A6','#F97316'];
+  var icons=['🍕','🛒','🚗','🎮','👕','🏠','🏥','📚','📱','📦'];
+  c.innerHTML=sorted.length?sorted.map(function(item,i){
+    return '<div class="sbar-it"><div class="sbi-ic" style="background:'+colors[i%colors.length]+'22;color:'+colors[i%colors.length]+'">'+icons[i%icons.length]+'</div>'+
+      '<div class="sbi-info"><div class="sbi-nm">'+item[0]+'</div><div class="sbi-bar-w"><div class="sbi-bar" style="width:'+(item[1]/max*100).toFixed(0)+'%;background:'+colors[i%colors.length]+'"></div></div></div>'+
+      '<div class="sbi-amt">¥'+item[1].toFixed(2)+'</div></div>';
+  }).join(''):'<div class="empty-s"><div class="empty-ic">📊</div><div class="empty-t">暂无数据</div></div>';
 }
 
-function renderMonthStats() {
-  var y = statsCursor.getFullYear(), m = statsCursor.getMonth();
-  var inc = 0, exp = 0;
-  var incByCat = {}, expByCat = {};
-  txData.forEach(function(t) {
-    var d = new Date(t.date);
-    if (d.getFullYear()===y && d.getMonth()===m) {
-      if (t.type==='income') { inc += t.amount; incByCat[t.cat] = (incByCat[t.cat]||0) + t.amount; }
-      else { exp += t.amount; expByCat[t.cat] = (expByCat[t.cat]||0) + t.amount; }
-    }
-  });
-  document.getElementById('stats-summary').innerHTML = '' +
-    '<div class="summary-card"><div class="sc-label">收入</div><div class="sc-amount income">¥' + inc.toFixed(2) + '</div></div>' +
-    '<div class="summary-card"><div class="sc-label">支出</div><div class="sc-amount expense">¥' + exp.toFixed(2) + '</div></div>';
+function drawChart(incD,expD,isYear){
+  var canvas=document.getElementById('chart');
+  var rect=canvas.parentElement.getBoundingClientRect();
+  var W=Math.floor(rect.width),H=Math.floor(rect.height);
+  canvas.width=W*2;canvas.height=H*2;canvas.style.width=W+'px';canvas.style.height=H+'px';
+  var ctx=canvas.getContext('2d');ctx.scale(2,2);ctx.clearRect(0,0,W,H);
 
-  // Category breakdown
-  var container = document.getElementById('stats-category-list');
-  var sorted = Object.entries(expByCat).sort(function(a,b) { return b[1] - a[1]; });
-  var max = sorted.length ? sorted[0][1] : 1;
-  var colors = ['#F59E0B','#3B82F6','#6366F1','#EC4899','#EF4444','#8B5CF6','#06B6D4','#84CC16','#14B8A6','#F97316'];
-  var icons = ['🍕','🛒','🚗','🎮','👕','🏠','🏥','📚','📱','📦'];
-  container.innerHTML = sorted.length ? sorted.map(function(item, i) {
-    var cat = item[0], total = item[1];
-    return '<div class="stat-bar-item"><div class="sbi-icon" style="background:' + colors[i%colors.length] + '22;color:' + colors[i%colors.length] + '">' + icons[i%icons.length] + '</div>' +
-      '<div class="sbi-info"><div class="sbi-name">' + cat + '</div><div class="sbi-bar-wrap" style="background:' + colors[i%colors.length] + '22">' +
-      '<div class="sbi-bar" style="width:' + (total/max*100).toFixed(0) + '%;background:' + colors[i%colors.length] + '"></div></div></div>' +
-      '<div class="sbi-amount">¥' + total.toFixed(2) + '</div></div>';
-  }).join('') : '<div class="empty-state"><div class="empty-icon">📊</div><div class="empty-text">暂无数据</div></div>';
+  var keys=isYear?Object.keys(incD).map(Number).sort(function(a,b){return a-b}):Object.keys(expD);
+  if(keys.length===0){ctx.fillStyle='#94A3B8';ctx.font='13px sans-serif';ctx.textAlign='center';ctx.fillText('暂无数据',W/2,H/2);return;}
 
-  drawChart(incByCat, expByCat);
-}
+  var pad={t:8,b:20,l:2,r:2},cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;
+  var gap=2,gGap=Math.max(2,cW/keys.length*0.12),bW=Math.min(22,(cW-gGap*keys.length)/keys.length/2);
+  if(bW<3)bW=3;
 
-function renderYearStats() {
-  var y = statsCursor.getFullYear();
-  var inc = 0, exp = 0;
-  var monthlyInc = {}, monthlyExp = {};
-  for (var mi=0; mi<12; mi++) { monthlyInc[mi] = 0; monthlyExp[mi] = 0; }
-  txData.forEach(function(t) {
-    var d = new Date(t.date);
-    if (d.getFullYear()===y) {
-      if (t.type==='income') { inc += t.amount; monthlyInc[d.getMonth()] = (monthlyInc[d.getMonth()]||0) + t.amount; }
-      else { exp += t.amount; monthlyExp[d.getMonth()] = (monthlyExp[d.getMonth()]||0) + t.amount; }
-    }
-  });
-  document.getElementById('stats-summary').innerHTML = '' +
-    '<div class="summary-card"><div class="sc-label">年收入</div><div class="sc-amount income">¥' + inc.toFixed(2) + '</div></div>' +
-    '<div class="summary-card"><div class="sc-label">年支出</div><div class="sc-amount expense">¥' + exp.toFixed(2) + '</div></div>';
+  var allVals=[];keys.forEach(function(k){allVals.push(incD[k]||0);allVals.push(expD[k]||0);});
+  var max=Math.max.apply(null,allVals)*1.25||1;
 
-  var container = document.getElementById('stats-category-list');
-  var expByCat = {};
-  txData.forEach(function(t) {
-    var d = new Date(t.date);
-    if (d.getFullYear()===y && t.type==='expense') expByCat[t.cat] = (expByCat[t.cat]||0) + t.amount;
-  });
-  var sorted = Object.entries(expByCat).sort(function(a,b) { return b[1] - a[1]; });
-  var max = sorted.length ? sorted[0][1] : 1;
-  var colors = ['#F59E0B','#3B82F6','#6366F1','#EC4899','#EF4444','#8B5CF6','#06B6D4','#84CC16','#14B8A6','#F97316'];
-  var icons = ['🍕','🛒','🚗','🎮','👕','🏠','🏥','📚','📱','📦'];
-  container.innerHTML = sorted.length ? sorted.map(function(item, i) {
-    var cat = item[0], total = item[1];
-    return '<div class="stat-bar-item"><div class="sbi-icon" style="background:' + colors[i%colors.length] + '22;color:' + colors[i%colors.length] + '">' + icons[i%icons.length] + '</div>' +
-      '<div class="sbi-info"><div class="sbi-name">' + cat + '</div><div class="sbi-bar-wrap" style="background:' + colors[i%colors.length] + '22">' +
-      '<div class="sbi-bar" style="width:' + (total/max*100).toFixed(0) + '%;background:' + colors[i%colors.length] + '"></div></div></div>' +
-      '<div class="sbi-amount">¥' + total.toFixed(2) + '</div></div>';
-  }).join('') : '<div class="empty-state"><div class="empty-icon">📊</div><div class="empty-text">暂无数据</div></div>';
+  // Grid lines
+  ctx.strokeStyle='#F1F5F9';ctx.lineWidth=1;
+  for(var g=0;g<=4;g++){var gy=pad.t+cH*(1-g/4);ctx.beginPath();ctx.moveTo(pad.l,gy);ctx.lineTo(W-pad.r,gy);ctx.stroke();}
+  ctx.fillStyle='#CBD5E1';ctx.font='9px sans-serif';ctx.textAlign='left';
+  for(var g=0;g<=4;g++){ctx.fillText('¥'+(max*g/4/1000).toFixed(1)+'k',2,pad.t+cH*(1-g/4)-2);}
 
-  drawChart(monthlyInc, monthlyExp, true);
-}
-
-function drawChart(incData, expData, isYear) {
-  var canvas = document.getElementById('stats-chart');
-  var rect = canvas.parentElement.getBoundingClientRect();
-  canvas.width = rect.width * 2;
-  canvas.height = rect.height * 2;
-  canvas.style.width = rect.width + 'px';
-  canvas.style.height = rect.height + 'px';
-  var ctx = canvas.getContext('2d');
-  ctx.scale(2, 2);
-  var W = rect.width, H = rect.height;
-
-  ctx.clearRect(0, 0, W, H);
-
-  var keys = isYear ? Object.keys(incData).map(Number).sort(function(a,b){return a-b}) : Object.keys(expData);
-  if (!keys.length) {
-    ctx.fillStyle = '#94A3B8'; ctx.font = '13px sans-serif';
-    ctx.textAlign = 'center'; ctx.fillText('暂无数据', W/2, H/2);
-    return;
-  }
-
-  var padding = {top:10, bottom:24, left:8, right:8};
-  var chartW = W - padding.left - padding.right;
-  var chartH = H - padding.top - padding.bottom;
-  var barGap = 3, groupGap = Math.max(2, chartW / keys.length * 0.15);
-  var barW = Math.min(20, (chartW - groupGap * (keys.length)) / keys.length / 2);
-
-  // Determine max value
-  var allVals = [];
-  keys.forEach(function(k) {
-    allVals.push(incData[k]||0);
-    allVals.push(expData[k]||0);
-  });
-  var maxVal = Math.max.apply(null, allVals) * 1.2 || 1;
-
-  // Draw bars
-  keys.forEach(function(k, i) {
-    var incVal = incData[k] || 0;
-    var expVal = expData[k] || 0;
-    var x = padding.left + i * (barW * 2 + barGap + groupGap);
+  // Bars
+  keys.forEach(function(k,i){
+    var iv=incD[k]||0,ev=expD[k]||0;
+    var x=pad.l+i*(bW*2+gap+gGap)+gGap/2;
 
     // Income bar
-    var incH = (incVal / maxVal) * chartH;
-    ctx.fillStyle = '#10B981';
-    ctx.beginPath();
-    ctx.roundRect(x, padding.top + chartH - incH, barW, incH, [2,2,0,0]);
-    ctx.fill();
+    if(iv>0){var ih=(iv/max)*cH;ctx.fillStyle='#059669';
+      roundRect(ctx,x,pad.t+cH-ih,bW,ih,2);
+      ctx.fill();}
 
     // Expense bar
-    var expH = (expVal / maxVal) * chartH;
-    ctx.fillStyle = '#EF4444';
-    ctx.beginPath();
-    ctx.roundRect(x + barW + barGap, padding.top + chartH - expH, barW, expH, [2,2,0,0]);
-    ctx.fill();
+    if(ev>0){var eh=(ev/max)*cH;ctx.fillStyle='#DC2626';
+      roundRect(ctx,x+bW+gap,pad.t+cH-eh,bW,eh,2);
+      ctx.fill();}
 
     // Label
-    ctx.fillStyle = '#94A3B8'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText(isYear ? (k+1)+'月' : keys[i], x + barW + barGap/2, H - 4);
+    ctx.fillStyle='#64748B';ctx.font='9px sans-serif';ctx.textAlign='center';
+    ctx.fillText(isYear?(k+1)+'月':keys[i],x+bW+gap/2,H-4);
   });
 
   // Legend
-  ctx.fillStyle = '#10B981'; ctx.fillRect(W - 70, 6, 8, 8);
-  ctx.fillStyle = '#94A3B8'; ctx.font = '10px sans-serif'; ctx.textAlign = 'left';
-  ctx.fillText('收入', W - 58, 14);
-  ctx.fillStyle = '#EF4444'; ctx.fillRect(W - 30, 6, 8, 8);
-  ctx.fillStyle = '#94A3B8'; ctx.fillText('支出', W - 18, 14);
+  ctx.fillStyle='#059669';roundRect(ctx,W-68,4,8,8,2);ctx.fill();
+  ctx.fillStyle='#64748B';ctx.font='10px sans-serif';ctx.textAlign='left';ctx.fillText('收入',W-56,12);
+  ctx.fillStyle='#DC2626';roundRect(ctx,W-28,4,8,8,2);ctx.fill();
+  ctx.fillText('支出',W-16,12);
+}
+
+function roundRect(ctx,x,y,w,h,r){
+  r=Math.min(r,w/2,h/2);
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath();
 }
 
 // ==================== CATEGORY EDIT ====================
-function renderCategoryEdit() {
-  var container = document.getElementById('category-edit-list');
-  container.innerHTML = categories.expense.map(function(c) {
-    return '<div class="cat-edit-item"><div class="cei-icon" style="background:' + c.color + '">' + c.icon + '</div>' +
-      '<div class="cei-name">' + c.name + '</div><button class="cei-del" onclick="this.parentElement.remove()">✕</button></div>';
-  }).join('');
-}
+function renderCatEdit(){document.getElementById('cat-edit-list').innerHTML=categories.expense.map(function(c){return'<div class="ce-it"><div class="ce-ic" style="background:'+c.color+'">'+c.icon+'</div><div class="ce-nm">'+c.name+'</div><button class="ce-del" onclick="this.parentElement.remove()">✕</button></div>';}).join('');}
 
-// ==================== TAB SWITCHING ====================
-function switchTab(idx) {
-  if (transitioning) return;
-  var pages = ['home','transactions','stats','profile'];
-  pageStack = [pages[idx]];
-  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
-  var el = document.getElementById('page-'+pages[idx]);
-  if (el) el.classList.add('active');
-  updateTabBar(pages[idx]);
-  renderPage(pages[idx]);
+// ==================== TABS ====================
+function switchTab(i){
+  if(transitioning)return;var pages=['home','transactions','stats','profile'];pageStack=[pages[i]];
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  var el=document.getElementById('page-'+pages[i]);if(el)el.classList.add('active');updateTab(pages[i]);renderPage(pages[i]);
 }
 
 // ==================== EXPORT ====================
-function exportData() {
-  var text = '类型,分类,名称,金额,日期,备注\n';
-  txData.forEach(function(t) {
-    text += (t.type==='income'?'收入':'支出') + ',' + t.cat + ',' + t.name + ',' + t.amount.toFixed(2) + ',' + t.date + ',' + (t.note||'') + '\n';
-  });
-  var blob = new Blob(['﻿' + text], {type:'text/csv;charset=utf-8;'});
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = '小账本_' + new Date().toISOString().slice(0,10) + '.csv';
-  a.click();
-  showToast('已导出 CSV');
+function exportData(){
+  var t='类型,分类,名称,金额,日期,备注\n';
+  txData.forEach(function(x){t+=(x.type==='income'?'收入':'支出')+','+x.cat+','+x.name+','+x.amount.toFixed(2)+','+x.date+','+(x.note||'')+'\n';});
+  var b=new Blob(['﻿'+t],{type:'text/csv;charset=utf-8;'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='小账本_'+new Date().toISOString().slice(0,10)+'.csv';a.click();toast('已导出 CSV');
 }
 
 // ==================== INIT ====================
-document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('page-login').classList.add('active');
-  document.querySelectorAll('.page').forEach(function(p) { p.style.transform = ''; p.style.opacity = ''; p.style.display = ''; p.style.pointerEvents = ''; });
-});
+document.addEventListener('DOMContentLoaded',function(){document.getElementById('page-login').classList.add('active');document.querySelectorAll('.page').forEach(function(p){p.style.transform='';p.style.opacity='';p.style.display='';p.style.pointerEvents='';});});
 </script>
 </body>
 </html>
