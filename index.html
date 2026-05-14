@@ -2,27 +2,42 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>小账本 - 轻松记账</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{--primary:#10B981;--primary-dark:#059669;--primary-light:#D1FAE5;--income:#10B981;--expense:#EF4444;--bg:#F5F7FA;--card:#FFFFFF;--text:#1E293B;--text2:#64748B;--text3:#94A3B8;--border:#E2E8F0;--radius:12px;--shadow:0 2px 12px rgba(0,0,0,.06)}
-body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-serif;background:#E8ECF0;display:flex;justify-content:center;min-height:100vh;color:var(--text)}
-#app{width:390px;min-height:100vh;background:var(--bg);position:relative;overflow:hidden;box-shadow:0 0 40px rgba(0,0,0,.1)}
-.page{display:none;flex-direction:column;min-height:100vh;animation:fadeIn .25s ease}
-.page.active{display:flex}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+:root{--primary:#10B981;--primary-dark:#059669;--primary-light:#D1FAE5;--income:#10B981;--expense:#EF4444;--bg:#F5F7FA;--card:#FFFFFF;--text:#1E293B;--text2:#64748B;--text3:#94A3B8;--border:#E2E8F0;--radius:12px;--staus-h:48px}
+body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-serif;color:var(--text);background:#000;-webkit-font-smoothing:antialiased}
+
+/* ===== Phone Frame (desktop only) ===== */
+@media(min-width:431px){
+  body{background:#E8ECF0;display:flex;justify-content:center;align-items:center;min-height:100vh}
+  #phone{width:393px;height:852px;background:var(--bg);border-radius:44px;border:6px solid #1a1a2e;overflow:hidden;position:relative;box-shadow:0 24px 80px rgba(0,0,0,.25),inset 0 0 0 1px rgba(255,255,255,.05)}
+  #phone::before{content:'';position:absolute;top:12px;left:50%;transform:translateX(-50%);width:130px;height:28px;background:#1a1a2e;border-radius:0 0 16px 16px;z-index:99;pointer-events:none}
+}
+@media(max-width:430px){
+  body{background:var(--bg)}
+  #phone{width:100%;height:100dvh;overflow:hidden;position:relative}
+}
+
+/* ===== Page stack ===== */
+#phone{display:flex;flex-direction:column}
+
+.pages-container{flex:1;position:relative;overflow:hidden}
+.page{display:none;flex-direction:column;position:absolute;inset:0;z-index:1;background:var(--bg);overflow:hidden;pointer-events:none}
+.page.active{display:flex;z-index:10;pointer-events:auto}
+.page.anim{transition:transform .32s cubic-bezier(.4,0,.2,1),opacity .28s ease}
+.page-content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:8px}
+.page-content::-webkit-scrollbar{display:none}
 
 /* Status Bar */
-.status-bar{display:flex;justify-content:space-between;padding:12px 20px 6px;font-size:12px;font-weight:600;background:var(--card);color:var(--text)}
-.auth .status-bar{background:var(--primary);color:#fff}
+.status-bar{display:flex;justify-content:space-between;padding:14px 20px 4px;font-size:12px;font-weight:600;background:var(--card);color:var(--text);flex-shrink:0}
+.auth-page .status-bar{background:transparent;color:#fff}
 
 /* Header */
-.header{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:var(--card);min-height:52px}
+.header{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:var(--card);min-height:50px;flex-shrink:0}
 .header-title{font-size:18px;font-weight:600}
-.header-back{font-size:22px;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:none;background:none;color:var(--text);border-radius:50%}
+.header-back{font-size:20px;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:none;background:none;color:var(--text);border-radius:50%}
 .header-back:active{background:#f0f0f0}
 .header-right{font-size:14px;color:var(--primary);font-weight:500;cursor:pointer;border:none;background:none}
 
@@ -41,29 +56,25 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
 .input-field::placeholder{color:var(--text3)}
 
 /* Tab Bar */
-.tab-bar{display:flex;align-items:center;justify-content:space-around;background:var(--card);padding:6px 0 12px;border-top:1px solid #f0f0f0;position:sticky;bottom:0;z-index:10}
-.tab-item{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:4px 12px;border:none;background:none;font-size:10px;color:var(--text3);transition:color .2s}
+.tab-bar{display:flex;align-items:center;justify-content:space-around;background:var(--card);padding:4px 0 max(8px,env(safe-area-inset-bottom,0));border-top:1px solid #f0f0f0;flex-shrink:0;position:relative;z-index:20}
+.tab-item{display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;padding:4px 12px;border:none;background:none;font-size:10px;color:var(--text3);transition:color .15s}
 .tab-item.active{color:var(--primary)}
 .tab-item .tab-icon{font-size:22px;line-height:1.2}
-.tab-add{width:50px;height:50px;border-radius:25px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));border:none;color:#fff;font-size:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:-16px;box-shadow:0 4px 12px rgba(16,185,129,.35)}
-.tab-add:active{transform:scale(.95)}
-
-/* Page Content */
-.page-content{flex:1;overflow-y:auto;padding-bottom:8px}
-.page-content::-webkit-scrollbar{display:none}
+.tab-add{width:48px;height:48px;border-radius:24px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));border:none;color:#fff;font-size:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:-14px;box-shadow:0 4px 12px rgba(16,185,129,.35)}
+.tab-add:active{transform:scale(.92)}
 
 /* Cards */
 .card{background:var(--card);border-radius:var(--radius);padding:20px;margin:12px 16px;box-shadow:var(--shadow)}
 
 /* ======== Auth Pages ======== */
-.auth-page{background:linear-gradient(135deg,var(--primary),#059669);min-height:100vh;display:flex;flex-direction:column;justify-content:space-between}
+.auth-page{background:linear-gradient(135deg,var(--primary),#059669)}
 .auth-body{padding:0 32px 40px;flex:1;display:flex;flex-direction:column;justify-content:center}
-.auth-logo{text-align:center;margin-bottom:40px}
+.auth-logo{text-align:center;margin-bottom:36px}
 .auth-logo .logo-icon{width:72px;height:72px;border-radius:36px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 16px}
 .auth-logo h1{color:#fff;font-size:28px;font-weight:700}
 .auth-logo p{color:rgba(255,255,255,.7);font-size:14px;margin-top:4px}
-.auth-box{background:var(--card);border-radius:20px;padding:32px 24px;box-shadow:0 8px 30px rgba(0,0,0,.1)}
-.auth-tabs{display:flex;margin-bottom:24px;border-bottom:2px solid #f0f0f0}
+.auth-box{background:var(--card);border-radius:20px;padding:28px 24px;box-shadow:0 8px 30px rgba(0,0,0,.1)}
+.auth-tabs{display:flex;margin-bottom:20px;border-bottom:2px solid #f0f0f0}
 .auth-tab{flex:1;text-align:center;padding:12px 0;font-size:15px;font-weight:500;color:var(--text3);cursor:pointer;border:none;background:none;position:relative}
 .auth-tab.active{color:var(--primary)}
 .auth-tab.active::after{content:'';position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);width:40px;height:2px;background:var(--primary);border-radius:1px}
@@ -86,7 +97,6 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
 .quick-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;cursor:pointer;font-size:14px;font-weight:500;transition:all .2s}
 .quick-btn:active{transform:scale(.97);background:#f8f8f8}
 .quick-btn .q-icon{font-size:20px}
-
 .section-header{display:flex;justify-content:space-between;align-items:center;padding:16px 16px 8px}
 .section-title{font-size:17px;font-weight:600}
 .section-more{font-size:13px;color:var(--primary);cursor:pointer;border:none;background:none}
@@ -106,13 +116,11 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
 .tx-amount.expense{color:var(--expense)}
 
 /* ======== Transactions ======== */
-.filter-tabs{display:flex;gap:8px;padding:12px 16px;overflow-x:auto}
+.filter-tabs{display:flex;gap:8px;padding:12px 16px;overflow-x:auto;flex-shrink:0}
 .filter-tabs::-webkit-scrollbar{display:none}
 .filter-tab{padding:7px 18px;border-radius:16px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:var(--card);color:var(--text2);white-space:nowrap;transition:all .2s;border:1px solid var(--border)}
 .filter-tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
 .filter-tab:active{transform:scale(.95)}
-
-.date-group{padding:0 0 8px}
 .date-header{font-size:13px;font-weight:600;color:var(--text2);padding:16px 16px 8px}
 
 /* ======== Add Transaction ======== */
@@ -123,8 +131,6 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
 .amount-display{text-align:center;padding:12px 16px;margin:0 16px;background:var(--card);border-radius:var(--radius)}
 .amount-display .label{font-size:13px;color:var(--text2)}
 .amount-display .value{font-size:40px;font-weight:700;margin-top:4px;color:var(--text)}
-.amount-display .value.focus{color:var(--primary)}
-
 .category-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px 8px;padding:16px}
 .cat-item{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;padding:8px;border-radius:var(--radius);border:none;background:none;transition:all .15s}
 .cat-item:active{background:var(--primary-light)}
@@ -152,34 +158,31 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
 .month-selector .month-text{font-size:16px;font-weight:600}
 .month-nav{font-size:18px;cursor:pointer;color:var(--text2);border:none;background:none;padding:4px 8px}
 .month-nav:active{color:var(--primary)}
-
 .summary-cards{display:flex;gap:12px;padding:16px;margin:0}
 .summary-card{flex:1;background:var(--card);border-radius:var(--radius);padding:16px;text-align:center}
 .summary-card .sc-label{font-size:12px;color:var(--text2)}
 .summary-card .sc-amount{font-size:20px;font-weight:700;margin-top:6px}
 .summary-card .sc-amount.income{color:var(--income)}
 .summary-card .sc-amount.expense{color:var(--expense)}
-
 .stat-bar-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--card);margin:0 16px 1px}
 .stat-bar-item:first-child{border-radius:var(--radius) var(--radius) 0 0;margin-top:8px}
 .stat-bar-item:last-child{border-radius:0 0 var(--radius) var(--radius);margin-bottom:12px}
 .stat-bar-item .sbi-icon{width:36px;height:36px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .stat-bar-item .sbi-info{flex:1}
 .stat-bar-item .sbi-name{font-size:14px;font-weight:500}
-.stat-bar-item .sbi-bar-wrap{height:6px;border-radius:3px;margin-top:6px;overflow:hidden}
+.stat-bar-item .sbi-bar-wrap{height:6px;border-radius:3px;margin-top:6px;overflow:hidden;background:#f0f0f0}
 .stat-bar-item .sbi-bar{height:100%;border-radius:3px;transition:width .6s ease}
 .stat-bar-item .sbi-amount{font-size:14px;font-weight:600;white-space:nowrap}
 
 /* ======== Profile ======== */
-.profile-header{background:linear-gradient(135deg,var(--primary),#059669);padding:40px 20px 30px;text-align:center;color:#fff;margin-bottom:-20px}
+.profile-header{background:linear-gradient(135deg,var(--primary),#059669);padding:36px 20px 28px;text-align:center;color:#fff}
 .profile-avatar{width:72px;height:72px;border-radius:36px;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 12px}
 .profile-name{font-size:20px;font-weight:600}
 .profile-phone{font-size:13px;color:rgba(255,255,255,.7);margin-top:4px}
-.profile-stats{display:flex;gap:1px;background:var(--card);margin:28px 16px 0;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.profile-stats{display:flex;gap:1px;background:var(--card);margin:0 16px;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-top:-20px}
 .profile-stat{flex:1;text-align:center;padding:16px 8px;background:var(--card)}
 .profile-stat .ps-num{font-size:20px;font-weight:700}
 .profile-stat .ps-label{font-size:12px;color:var(--text3);margin-top:2px}
-
 .menu-list{background:var(--card);margin:12px 16px;border-radius:var(--radius);overflow:hidden}
 .menu-item{display:flex;align-items:center;gap:12px;padding:16px;cursor:pointer;border:none;background:none;width:100%;text-align:left;font-size:15px;color:var(--text)}
 .menu-item:active{background:#f8f8f8}
@@ -189,7 +192,9 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
 
 /* ======== Logout Modal ======== */
 .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.45);z-index:100;justify-content:center;align-items:center}
-.modal-overlay.show{display:flex;animation:fadeIn .2s ease}
+.modal-overlay.show{display:flex}
+.modal-overlay.show .modal-box{animation:modalIn .25s ease}
+@keyframes modalIn{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
 .modal-box{background:var(--card);border-radius:16px;padding:28px 24px 20px;width:300px;text-align:center}
 .modal-title{font-size:17px;font-weight:600;margin-bottom:8px}
 .modal-desc{font-size:14px;color:var(--text2);margin-bottom:24px}
@@ -205,11 +210,11 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
 .settings-item+.settings-item{border-top:1px solid #f5f5f5}
 .settings-item .si-left{display:flex;align-items:center;gap:10px}
 .settings-item .si-right{display:flex;align-items:center;gap:8px;color:var(--text3);font-size:14px}
-.logout-btn{display:block;width:calc(100% - 32px);margin:24px 16px;padding:14px;border-radius:var(--radius);border:none;background:var(--card);color:var(--expense);font-size:16px;font-weight:500;cursor:pointer;text-align:center}
+.logout-btn{display:block;width:calc(100% - 32px);margin:24px auto;padding:14px;border-radius:var(--radius);border:none;background:var(--card);color:var(--expense);font-size:16px;font-weight:500;cursor:pointer;text-align:center}
 .logout-btn:active{background:#fef2f2}
 
-/* Toggle Switch */
-.toggle{width:44px;height:26px;border-radius:13px;background:#ddd;position:relative;cursor:pointer;transition:background .2s;border:none}
+/* Toggle */
+.toggle{width:44px;height:26px;border-radius:13px;background:#ddd;position:relative;cursor:pointer;transition:background .2s;border:none;flex-shrink:0}
 .toggle.on{background:var(--primary)}
 .toggle::after{content:'';width:22px;height:22px;border-radius:11px;background:#fff;position:absolute;top:2px;left:2px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
 .toggle.on::after{transform:translateX(18px)}
@@ -223,19 +228,20 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
 .cat-edit-item .cei-del{font-size:18px;color:var(--expense);cursor:pointer;border:none;background:none;padding:4px 8px}
 
 /* Misc */
-.divider{height:1px;background:#f0f0f0;margin:0 16px}
 .empty-state{text-align:center;padding:60px 20px;color:var(--text3)}
 .empty-state .empty-icon{font-size:48px;margin-bottom:12px}
 .empty-state .empty-text{font-size:14px}
 </style>
 </head>
 <body>
-<div id="app">
+<div id="phone">
+<div class="pages-container">
 
 <!-- ==================== AUTH PAGES ==================== -->
 
 <!-- Login -->
 <div class="page auth-page" id="page-login">
+  <div class="status-bar"><span style="color:#fff">9:41</span><span style="color:rgba(255,255,255,.7)">📶 🔋</span></div>
   <div class="auth-body">
     <div class="auth-logo">
       <div class="logo-icon">💰</div>
@@ -282,13 +288,14 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
 
 <!-- Register -->
 <div class="page auth-page" id="page-register">
-  <div class="auth-body">
-    <div class="auth-logo">
-      <div class="logo-icon">✍️</div>
-      <h1>注册账号</h1>
-      <p>30秒快速注册，开始记账</p>
-    </div>
-    <div class="auth-box">
+  <div class="status-bar"><span style="color:#fff">9:41</span><span style="color:rgba(255,255,255,.7)">📶 🔋</span></div>
+  <div class="header" style="background:transparent;position:relative;z-index:5">
+    <button class="header-back" style="color:#fff" onclick="goBack()">←</button>
+    <span class="header-title" style="color:#fff">注册</span>
+    <span style="width:32px"></span>
+  </div>
+  <div class="auth-body" style="padding-top:0">
+    <div class="auth-box" style="margin-top:12px">
       <div class="input-group">
         <label class="input-label">手机号</label>
         <input class="input-field" type="tel" placeholder="请输入手机号" maxlength="11">
@@ -318,13 +325,14 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
 
 <!-- Forgot Password -->
 <div class="page auth-page" id="page-forgot">
-  <div class="auth-body">
-    <div class="auth-logo">
-      <div class="logo-icon">🔑</div>
-      <h1>找回密码</h1>
-      <p>验证身份后重置密码</p>
-    </div>
-    <div class="auth-box">
+  <div class="status-bar"><span style="color:#fff">9:41</span><span style="color:rgba(255,255,255,.7)">📶 🔋</span></div>
+  <div class="header" style="background:transparent;position:relative;z-index:5">
+    <button class="header-back" style="color:#fff" onclick="goBack()">←</button>
+    <span class="header-title" style="color:#fff">找回密码</span>
+    <span style="width:32px"></span>
+  </div>
+  <div class="auth-body" style="padding-top:0">
+    <div class="auth-box" style="margin-top:12px">
       <div class="input-group">
         <label class="input-label">手机号</label>
         <input class="input-field" type="tel" placeholder="请输入注册手机号" maxlength="11">
@@ -484,6 +492,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
 
 <!-- Profile -->
 <div class="page" id="page-profile">
+  <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
   <div class="header">
     <button class="header-back" onclick="goBack()">←</button>
     <span class="header-title">个人中心</span>
@@ -507,10 +516,18 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
       <button class="menu-item" onclick="navigateTo('settings')"><span class="mi-icon">⚙️</span>设置<span class="mi-arrow">›</span></button>
     </div>
   </div>
+  <div class="tab-bar">
+    <button class="tab-item" onclick="switchTab(0)"><span class="tab-icon">🏠</span>首页</button>
+    <button class="tab-item" onclick="switchTab(1)"><span class="tab-icon">📋</span>账单</button>
+    <button class="tab-add" onclick="navigateTo('add')">+</button>
+    <button class="tab-item" onclick="switchTab(2)"><span class="tab-icon">📊</span>统计</button>
+    <button class="tab-item active" onclick="switchTab(3)"><span class="tab-icon">👤</span>我的</button>
+  </div>
 </div>
 
 <!-- Settings -->
 <div class="page" id="page-settings">
+  <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
   <div class="header">
     <button class="header-back" onclick="goBack()">←</button>
     <span class="header-title">设置</span>
@@ -535,6 +552,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
 
 <!-- Category Management -->
 <div class="page" id="page-categories">
+  <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
   <div class="header">
     <button class="header-back" onclick="goBack()">←</button>
     <span class="header-title">分类管理</span>
@@ -545,6 +563,8 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
     <div id="category-edit-list"></div>
   </div>
 </div>
+
+</div><!-- /pages-container -->
 
 <!-- ==================== LOGOUT MODAL ==================== -->
 <div class="modal-overlay" id="logout-modal">
@@ -558,7 +578,7 @@ body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-ser
   </div>
 </div>
 
-</div><!-- /app -->
+</div><!-- /phone -->
 
 <script>
 // ==================== DATA ====================
@@ -576,7 +596,6 @@ const txData = [
   {id:11,type:'expense',cat:'餐饮',icon:'🍜',name:'午餐',amount:32.00,date:'2026-05-07',note:'公司食堂'},
   {id:12,type:'expense',cat:'日用',icon:'🧴',name:'护肤品',amount:213.00,date:'2026-05-06',note:'屈臣氏'},
 ];
-
 const categories = {
   expense: [
     {name:'餐饮',icon:'🍕',color:'#FEF3C7'},
@@ -606,60 +625,167 @@ let currentFilter = 'all';
 let currentMonth = new Date(2026, 4);
 let selectedCat = null;
 let pageStack = ['login'];
+let transitioning = false;
+const TRANSITION_MS = 340;
 
 // ==================== ROUTING ====================
 function navigateTo(page) {
+  if (transitioning) return;
   pageStack.push(page);
-  showPage(page);
+  showPage(page, { dir:'forward' });
 }
 
 function goBack() {
-  if (pageStack.length > 1) pageStack.pop();
-  showPage(pageStack[pageStack.length-1], true);
+  if (transitioning) return;
+  if (pageStack.length > 1) {
+    pageStack.pop();
+    showPage(pageStack[pageStack.length-1], { dir:'back' });
+  }
 }
 
-function showPage(page, back=false) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const el = document.getElementById('page-'+page);
-  if (el) {
-    el.classList.add('active');
-    if (!back) el.style.animation = 'none';
-    setTimeout(() => el.style.animation = '', 10);
-  }
+function showPage(page, opts) {
+  opts = opts || {};
+  var oldEl = document.querySelector('.page.active');
+  var newEl = document.getElementById('page-'+page);
+  if (!newEl) return;
+
+  // Tab pages: instant switch, no slide
   if (['home','transactions','stats','profile'].includes(page)) {
+    if (oldEl) oldEl.classList.remove('active');
+    newEl.classList.add('active');
     pageStack = [page];
     updateTabBar(page);
+    renderPage(page);
+    return;
   }
-  if (page === 'home') renderHomeTx();
-  if (page === 'transactions') renderTxList();
-  if (page === 'add') renderCategories();
-  if (page === 'detail') renderDetail();
-  if (page === 'stats') renderStats();
-  if (page === 'categories') renderCategoryEdit();
+
+  // Auth special: login→home is a fade/login context (no slide)
+  if (page === 'home') {
+    if (oldEl) oldEl.classList.remove('active');
+    newEl.classList.add('active');
+    updateTabBar('home');
+    renderPage('home');
+    return;
+  }
+
+  // Slide transition
+  if (!opts.dir || opts.dir === 'forward') {
+    animateForward(oldEl, newEl);
+  } else {
+    animateBack(oldEl, newEl);
+  }
+  renderPage(page);
+}
+
+function renderPage(page) {
+  switch(page) {
+    case 'home': renderHomeTx(); break;
+    case 'transactions': renderTxList(); break;
+    case 'add': renderCategories(); break;
+    case 'detail': renderDetail(); break;
+    case 'stats': renderStats(); break;
+    case 'categories': renderCategoryEdit(); break;
+  }
+}
+
+function animateForward(oldEl, newEl) {
+  transitioning = true;
+  var dir = 'forward';
+
+  // Position new page off-screen right
+  newEl.classList.add('anim');
+  newEl.style.transform = 'translateX(100%)';
+  newEl.style.opacity = '1';
+  newEl.style.display = 'flex';
+  newEl.style.pointerEvents = 'auto';
+  void newEl.offsetHeight; // force reflow
+
+  // Animate
+  if (oldEl) {
+    oldEl.style.transform = 'translateX(-18%)';
+    oldEl.style.opacity = '0.5';
+  }
+  newEl.style.transform = 'translateX(0)';
+  newEl.style.opacity = '1';
+
+  // Cleanup
+  setTimeout(function() {
+    if (oldEl) {
+      oldEl.style.transform = '';
+      oldEl.style.opacity = '';
+      oldEl.style.display = '';
+      oldEl.style.pointerEvents = '';
+      oldEl.classList.remove('active', 'anim');
+    }
+    newEl.classList.add('active');
+    newEl.style.transform = '';
+    newEl.style.opacity = '';
+    newEl.style.pointerEvents = '';
+    newEl.classList.remove('anim');
+    transitioning = false;
+  }, TRANSITION_MS);
+}
+
+function animateBack(oldEl, newEl) {
+  transitioning = true;
+
+  // Position prev page underneath at slide-left
+  newEl.classList.add('anim');
+  newEl.style.transform = 'translateX(-18%)';
+  newEl.style.opacity = '0.5';
+  newEl.style.display = 'flex';
+  newEl.style.pointerEvents = 'none';
+  void newEl.offsetHeight; // force reflow
+
+  // Animate
+  if (oldEl) {
+    oldEl.style.transform = 'translateX(100%)';
+    oldEl.style.opacity = '0';
+  }
+  newEl.style.transform = 'translateX(0)';
+  newEl.style.opacity = '1';
+
+  // Cleanup
+  setTimeout(function() {
+    if (oldEl) {
+      oldEl.style.transform = '';
+      oldEl.style.opacity = '';
+      oldEl.style.display = '';
+      oldEl.style.pointerEvents = '';
+      oldEl.classList.remove('active', 'anim');
+    }
+    newEl.classList.add('active');
+    newEl.style.transform = '';
+    newEl.style.opacity = '';
+    newEl.style.pointerEvents = '';
+    newEl.classList.remove('anim');
+    transitioning = false;
+  }, TRANSITION_MS);
 }
 
 function updateTabBar(page) {
-  const map = {home:0, transactions:1, stats:2, profile:3};
-  const idx = map[page];
-  document.querySelectorAll('.tab-item').forEach((t,i) => {
+  var map = {home:0, transactions:1, stats:2, profile:3};
+  var idx = map[page];
+  document.querySelectorAll('.tab-item').forEach(function(t,i) {
     t.classList.toggle('active', i === idx);
   });
 }
 
 // ==================== AUTH ====================
 function switchAuthTab(idx) {
-  document.querySelectorAll('.auth-tab').forEach((t,i) => t.classList.toggle('active', i===idx));
+  document.querySelectorAll('.auth-tab').forEach(function(t,i) {
+    t.classList.toggle('active', i===idx);
+  });
   document.getElementById('login-password').style.display = idx === 0 ? 'block' : 'none';
   document.getElementById('login-code').style.display = idx === 1 ? 'block' : 'none';
 }
 
-let codeTimers = {};
 function sendCode(btn) {
-  let sec = 60;
+  var sec = 60;
   btn.disabled = true;
   btn.style.opacity = '.5';
   btn.textContent = sec + 's';
-  const timer = setInterval(() => {
+  var timer = setInterval(function() {
     sec--;
     btn.textContent = sec + 's';
     if (sec <= 0) {
@@ -672,25 +798,23 @@ function sendCode(btn) {
 }
 
 function handleLogin(btn) {
-  // Visual feedback
-  if (btn) {
-    btn.textContent = '登录中...';
-    btn.classList.add('loading');
-  }
-  // Small delay so user sees the feedback
+  if (btn) { btn.textContent = '登录中...'; btn.classList.add('loading'); }
   setTimeout(function() {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     pageStack = ['home'];
-    document.getElementById('page-home').classList.add('active');
-    updateTabBar('home');
-    renderHomeTx();
-  }, 300);
+    showPage('home');
+  }, 350);
 }
 
 function handleLogout() {
   hideLogoutModal();
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   pageStack = ['login'];
+  document.querySelectorAll('.page').forEach(function(p) {
+    p.classList.remove('active');
+    p.style.transform = '';
+    p.style.opacity = '';
+    p.style.display = '';
+    p.style.pointerEvents = '';
+  });
   document.getElementById('page-login').classList.add('active');
 }
 
@@ -704,35 +828,34 @@ function hideLogoutModal() {
 
 // ==================== HOME ====================
 function renderHomeTx() {
-  const container = document.getElementById('home-tx-list');
-  const recent = [...txData].sort((a,b) => b.id - a.id).slice(0, 5);
-  container.innerHTML = recent.map(t => renderTxItem(t)).join('');
+  var container = document.getElementById('home-tx-list');
+  var recent = [...txData].sort(function(a,b) { return b.id - a.id; }).slice(0, 5);
+  container.innerHTML = recent.map(function(t) { return renderTxItem(t); }).join('');
 }
 
 // ==================== TRANSACTIONS ====================
 function filterTx(filter, btn) {
   currentFilter = filter;
-  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.filter-tab').forEach(function(t) { t.classList.remove('active'); });
   btn.classList.add('active');
   renderTxList();
 }
 
 function renderTxList() {
-  const container = document.getElementById('tx-list');
-  let filtered = currentFilter === 'all' ? txData : txData.filter(t => t.type === currentFilter);
-  filtered = [...filtered].sort((a,b) => new Date(b.date) - new Date(a.date));
-
-  const groups = {};
-  filtered.forEach(t => {
-    const label = formatDateGroup(t.date);
+  var container = document.getElementById('tx-list');
+  var filtered = currentFilter === 'all' ? txData : txData.filter(function(t) { return t.type === currentFilter; });
+  filtered = [...filtered].sort(function(a,b) { return new Date(b.date) - new Date(a.date); });
+  var groups = {};
+  filtered.forEach(function(t) {
+    var label = formatDateGroup(t.date);
     if (!groups[label]) groups[label] = [];
     groups[label].push(t);
   });
-
-  let html = '';
-  Object.entries(groups).forEach(([label, items]) => {
+  var html = '';
+  Object.entries(groups).forEach(function(entry) {
+    var label = entry[0], items = entry[1];
     html += '<div class="date-header">' + label + '</div>';
-    items.forEach(t => { html += renderTxItem(t); });
+    items.forEach(function(t) { html += renderTxItem(t); });
   });
   container.innerHTML = html || '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">暂无记录</div></div>';
 }
@@ -747,7 +870,7 @@ function renderTxItem(t) {
 function formatDateGroup(dateStr) {
   if (dateStr === '2026-05-14') return '今天';
   if (dateStr === '2026-05-13') return '昨天';
-  const d = new Date(dateStr);
+  var d = new Date(dateStr);
   return (d.getMonth()+1) + '月' + d.getDate() + '日';
 }
 
@@ -761,8 +884,8 @@ function setAddType(type) {
 }
 
 function renderCategories() {
-  const grid = document.getElementById('category-grid');
-  const cats = categories[addType] || [];
+  var grid = document.getElementById('category-grid');
+  var cats = categories[addType] || [];
   grid.innerHTML = cats.map(function(c) {
     return '<button class="cat-item" data-cat="' + c.name + '" onclick="selectCat(\'' + c.name + '\',this)">' +
       '<div class="cat-icon" style="background:' + c.color + '">' + c.icon + '</div>' +
@@ -772,13 +895,11 @@ function renderCategories() {
 
 function selectCat(name, btn) {
   selectedCat = name;
-  document.querySelectorAll('.cat-item').forEach(c => c.style.background = '');
+  document.querySelectorAll('.cat-item').forEach(function(c) { c.style.background = ''; });
   if (btn) btn.style.background = '#D1FAE5';
 }
 
 function saveTransaction() {
-  const note = document.getElementById('add-note').value || '无备注';
-  const cat = selectedCat || '其他';
   if (!selectedCat) {
     document.querySelectorAll('.cat-item')[0].style.background = '#D1FAE5';
     selectedCat = document.querySelector('.cat-item')?.dataset?.cat || '其他';
@@ -793,10 +914,10 @@ function viewDetail(id) {
 }
 
 function renderDetail() {
-  const id = window._detailId;
-  const tx = txData.find(function(t) { return t.id === id; });
+  var id = window._detailId;
+  var tx = txData.find(function(t) { return t.id === id; });
   if (!tx) return;
-  const container = document.getElementById('detail-content');
+  var container = document.getElementById('detail-content');
   container.innerHTML = '' +
     '<div style="padding-top:8px"></div>' +
     '<div class="detail-card">' +
@@ -826,35 +947,30 @@ function changeMonth(delta) {
 }
 
 function renderStats() {
-  const container = document.getElementById('stats-category-list');
-  const expenses = txData.filter(function(t) { return t.type === 'expense'; });
-  const catTotals = {};
+  var container = document.getElementById('stats-category-list');
+  var expenses = txData.filter(function(t) { return t.type === 'expense'; });
+  var catTotals = {};
   expenses.forEach(function(t) {
     catTotals[t.cat] = (catTotals[t.cat] || 0) + t.amount;
   });
-  const sorted = Object.entries(catTotals).sort(function(a,b) { return b[1] - a[1]; });
-  const max = sorted.length ? sorted[0][1] : 1;
-
-  const colors = ['#F59E0B','#3B82F6','#6366F1','#EC4899','#EF4444','#8B5CF6','#06B6D4','#84CC16'];
-  const icons = ['🍕','🛒','🚗','🎮','👕','🏠','🏥','📚'];
-
+  var sorted = Object.entries(catTotals).sort(function(a,b) { return b[1] - a[1]; });
+  var max = sorted.length ? sorted[0][1] : 1;
+  var colors = ['#F59E0B','#3B82F6','#6366F1','#EC4899','#EF4444','#8B5CF6','#06B6D4','#84CC16'];
+  var icons = ['🍕','🛒','🚗','🎮','👕','🏠','🏥','📚'];
   container.innerHTML = sorted.map(function(item, i) {
     var cat = item[0], total = item[1];
     return '<div class="stat-bar-item">' +
       '<div class="sbi-icon" style="background:' + colors[i%colors.length] + '22;color:' + colors[i%colors.length] + '">' + icons[i%icons.length] + '</div>' +
-      '<div class="sbi-info">' +
-        '<div class="sbi-name">' + cat + '</div>' +
+      '<div class="sbi-info"><div class="sbi-name">' + cat + '</div>' +
         '<div class="sbi-bar-wrap" style="background:' + colors[i%colors.length] + '22">' +
-          '<div class="sbi-bar" style="width:' + (total/max*100).toFixed(0) + '%;background:' + colors[i%colors.length] + '"></div>' +
-        '</div>' +
-      '</div>' +
+          '<div class="sbi-bar" style="width:' + (total/max*100).toFixed(0) + '%;background:' + colors[i%colors.length] + '"></div></div></div>' +
       '<div class="sbi-amount">¥' + total.toFixed(2) + '</div></div>';
   }).join('');
 }
 
 // ==================== CATEGORY EDIT ====================
 function renderCategoryEdit() {
-  const container = document.getElementById('category-edit-list');
+  var container = document.getElementById('category-edit-list');
   container.innerHTML = categories.expense.map(function(c) {
     return '<div class="cat-edit-item">' +
       '<div class="cei-icon" style="background:' + c.color + '">' + c.icon + '</div>' +
@@ -865,16 +981,27 @@ function renderCategoryEdit() {
 
 // ==================== TAB SWITCHING ====================
 function switchTab(idx) {
-  const pages = ['home','transactions','stats','profile'];
+  if (transitioning) return;
+  var pages = ['home','transactions','stats','profile'];
   pageStack = [pages[idx]];
-  showPage(pages[idx]);
+  // Direct switch, animateForward would look odd for tabs
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  var el = document.getElementById('page-'+pages[idx]);
+  if (el) el.classList.add('active');
+  updateTabBar(pages[idx]);
+  renderPage(pages[idx]);
 }
 
 // ==================== INIT ====================
-// Also bind login events in case onclick fails
 document.addEventListener('DOMContentLoaded', function() {
-  // Ensure login page is active
   document.getElementById('page-login').classList.add('active');
+  // Reset all page inline styles
+  document.querySelectorAll('.page').forEach(function(p) {
+    p.style.transform = '';
+    p.style.opacity = '';
+    p.style.display = '';
+    p.style.pointerEvents = '';
+  });
 });
 </script>
 </body>
