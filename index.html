@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>小账本 - 轻松记账</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--primary:#10B981;--primary-dark:#059669;--primary-light:#D1FAE5;--income:#10B981;--expense:#EF4444;--bg:#F5F7FA;--card:#FFFFFF;--text:#1E293B;--text2:#64748B;--text3:#94A3B8;--border:#E2E8F0;--radius:12px;--shadow:0 2px 12px rgba(0,0,0,.06)}
+body{font-family:-apple-system,'PingFang SC','Helvetica Neue',system-ui,sans-serif;background:#E8ECF0;display:flex;justify-content:center;min-height:100vh;color:var(--text)}
+#app{width:390px;min-height:100vh;background:var(--bg);position:relative;overflow:hidden;box-shadow:0 0 40px rgba(0,0,0,.1)}
+.page{display:none;flex-direction:column;min-height:100vh;animation:fadeIn .25s ease}
+.page.active{display:flex}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+
+/* Status Bar */
+.status-bar{display:flex;justify-content:space-between;padding:12px 20px 6px;font-size:12px;font-weight:600;background:var(--card);color:var(--text)}
+.auth .status-bar{background:var(--primary);color:#fff}
+
+/* Header */
+.header{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:var(--card);min-height:52px}
+.header-title{font-size:18px;font-weight:600}
+.header-back{font-size:22px;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:none;background:none;color:var(--text);border-radius:50%}
+.header-back:active{background:#f0f0f0}
+.header-right{font-size:14px;color:var(--primary);font-weight:500;cursor:pointer;border:none;background:none}
+
+/* Buttons */
+.btn-primary{background:var(--primary);color:#fff;border:none;border-radius:var(--radius);padding:14px 24px;font-size:16px;font-weight:600;width:100%;cursor:pointer;transition:all .2s}
+.btn-primary:active{transform:scale(.98);background:var(--primary-dark)}
+.btn-outline{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:12px 20px;font-size:15px;cursor:pointer;width:100%}
+.btn-outline:active{background:#f8f8f8}
+
+/* Input */
+.input-group{margin-bottom:16px}
+.input-label{font-size:13px;font-weight:500;color:var(--text2);margin-bottom:6px;display:block}
+.input-field{width:100%;padding:14px 16px;border:1px solid var(--border);border-radius:var(--radius);font-size:15px;outline:none;background:var(--card);color:var(--text);transition:border .2s}
+.input-field:focus{border-color:var(--primary)}
+.input-field::placeholder{color:var(--text3)}
+
+/* Tab Bar */
+.tab-bar{display:flex;align-items:center;justify-content:space-around;background:var(--card);padding:6px 0 12px;border-top:1px solid #f0f0f0;position:sticky;bottom:0;z-index:10}
+.tab-item{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:4px 12px;border:none;background:none;font-size:10px;color:var(--text3);transition:color .2s}
+.tab-item.active{color:var(--primary)}
+.tab-item .tab-icon{font-size:22px;line-height:1.2}
+.tab-add{width:50px;height:50px;border-radius:25px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));border:none;color:#fff;font-size:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:-16px;box-shadow:0 4px 12px rgba(16,185,129,.35)}
+.tab-add:active{transform:scale(.95)}
+
+/* Page Content */
+.page-content{flex:1;overflow-y:auto;padding-bottom:8px}
+.page-content::-webkit-scrollbar{display:none}
+
+/* Cards */
+.card{background:var(--card);border-radius:var(--radius);padding:20px;margin:12px 16px;box-shadow:var(--shadow)}
+
+/* ======== Auth Pages ======== */
+.auth-page{background:linear-gradient(135deg,var(--primary),#059669);min-height:100vh;display:flex;flex-direction:column;justify-content:space-between}
+.auth-body{padding:0 32px 40px;flex:1;display:flex;flex-direction:column;justify-content:center}
+.auth-logo{text-align:center;margin-bottom:40px}
+.auth-logo .logo-icon{width:72px;height:72px;border-radius:36px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 16px}
+.auth-logo h1{color:#fff;font-size:28px;font-weight:700}
+.auth-logo p{color:rgba(255,255,255,.7);font-size:14px;margin-top:4px}
+.auth-box{background:var(--card);border-radius:20px;padding:32px 24px;box-shadow:0 8px 30px rgba(0,0,0,.1)}
+.auth-tabs{display:flex;margin-bottom:24px;border-bottom:2px solid #f0f0f0}
+.auth-tab{flex:1;text-align:center;padding:12px 0;font-size:15px;font-weight:500;color:var(--text3);cursor:pointer;border:none;background:none;position:relative}
+.auth-tab.active{color:var(--primary)}
+.auth-tab.active::after{content:'';position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);width:40px;height:2px;background:var(--primary);border-radius:1px}
+.auth-forgot{text-align:right;font-size:13px;color:var(--primary);margin-top:12px;cursor:pointer;border:none;background:none}
+.auth-footer{text-align:center;margin-top:24px;font-size:13px;color:var(--text3)}
+.auth-footer a{color:var(--primary);text-decoration:none;cursor:pointer;font-weight:500}
+
+/* ======== Home ======== */
+.balance-card{background:linear-gradient(135deg,var(--primary),#059669);border-radius:20px;padding:24px 24px 20px;margin:0 16px;color:#fff}
+.balance-label{font-size:13px;color:rgba(255,255,255,.7)}
+.balance-amount{font-size:36px;font-weight:700;margin:4px 0 16px}
+.balance-row{display:flex;gap:16px}
+.balance-item{flex:1}
+.balance-item-label{font-size:12px;color:rgba(255,255,255,.6)}
+.balance-item-amount{font-size:18px;font-weight:600;margin-top:2px}
+.balance-item-amount.income{color:#A7F3D0}
+.balance-item-amount.expense{color:#FCA5A5}
+
+.quick-actions{display:flex;gap:12px;padding:16px 16px 8px}
+.quick-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;cursor:pointer;font-size:14px;font-weight:500;transition:all .2s}
+.quick-btn:active{transform:scale(.97);background:#f8f8f8}
+.quick-btn .q-icon{font-size:20px}
+
+.section-header{display:flex;justify-content:space-between;align-items:center;padding:16px 16px 8px}
+.section-title{font-size:17px;font-weight:600}
+.section-more{font-size:13px;color:var(--primary);cursor:pointer;border:none;background:none}
+
+/* Transaction Item */
+.tx-item{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--card);margin:0 16px 1px;cursor:pointer;transition:background .15s}
+.tx-item:active{background:#fafafa}
+.tx-item:first-child{border-radius:var(--radius) var(--radius) 0 0;margin-top:0}
+.tx-item:last-child{border-radius:0 0 var(--radius) var(--radius);margin-bottom:12px}
+.tx-item:only-child{border-radius:var(--radius)}
+.tx-icon{width:42px;height:42px;border-radius:21px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.tx-info{flex:1;min-width:0}
+.tx-name{font-size:14px;font-weight:500}
+.tx-cat{font-size:12px;color:var(--text3);margin-top:1px}
+.tx-amount{font-size:15px;font-weight:600;white-space:nowrap}
+.tx-amount.income{color:var(--income)}
+.tx-amount.expense{color:var(--expense)}
+
+/* ======== Transactions ======== */
+.filter-tabs{display:flex;gap:8px;padding:12px 16px;overflow-x:auto}
+.filter-tabs::-webkit-scrollbar{display:none}
+.filter-tab{padding:7px 18px;border-radius:16px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:var(--card);color:var(--text2);white-space:nowrap;transition:all .2s;border:1px solid var(--border)}
+.filter-tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.filter-tab:active{transform:scale(.95)}
+
+.date-group{padding:0 0 8px}
+.date-header{font-size:13px;font-weight:600;color:var(--text2);padding:16px 16px 8px}
+
+/* ======== Add Transaction ======== */
+.add-type-toggle{display:flex;gap:12px;padding:16px;margin:0 16px}
+.add-type-btn{flex:1;padding:12px;border-radius:10px;border:none;font-size:15px;font-weight:500;cursor:pointer;transition:all .2s}
+.add-type-btn.active{background:var(--primary);color:#fff}
+.add-type-btn:not(.active){background:var(--card);color:var(--text2);border:1px solid var(--border)}
+.amount-display{text-align:center;padding:12px 16px;margin:0 16px;background:var(--card);border-radius:var(--radius)}
+.amount-display .label{font-size:13px;color:var(--text2)}
+.amount-display .value{font-size:40px;font-weight:700;margin-top:4px;color:var(--text)}
+.amount-display .value.focus{color:var(--primary)}
+
+.category-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px 8px;padding:16px}
+.cat-item{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;padding:8px;border-radius:var(--radius);border:none;background:none;transition:all .15s}
+.cat-item:active{background:var(--primary-light)}
+.cat-item .cat-icon{width:48px;height:48px;border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.cat-item .cat-name{font-size:12px;color:var(--text2)}
+
+/* ======== Detail ======== */
+.detail-card{background:var(--card);text-align:center;padding:32px 20px;margin:12px 16px;border-radius:var(--radius)}
+.detail-card .d-icon{width:56px;height:56px;border-radius:28px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px}
+.detail-card .d-amount{font-size:32px;font-weight:700;margin:8px 0 4px}
+.detail-card .d-name{font-size:17px;font-weight:500;margin-bottom:4px}
+.detail-card .d-cat{font-size:13px;color:var(--text3)}
+.detail-info{padding:0 16px;margin:12px 16px;background:var(--card);border-radius:var(--radius)}
+.detail-row{display:flex;justify-content:space-between;padding:16px 0;font-size:14px}
+.detail-row+.detail-row{border-top:1px solid #f5f5f5}
+.detail-row .label{color:var(--text2)}
+.detail-row .value{font-weight:500;text-align:right;max-width:60%}
+.detail-actions{display:flex;gap:12px;padding:16px}
+.detail-actions button{flex:1;padding:14px;border-radius:var(--radius);font-size:15px;font-weight:500;cursor:pointer;border:none}
+.detail-actions .btn-del{background:#FEF2F2;color:var(--expense)}
+.detail-actions .btn-edit{background:var(--primary-light);color:var(--primary)}
+
+/* ======== Statistics ======== */
+.month-selector{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--card);margin:0 16px;border-radius:var(--radius)}
+.month-selector .month-text{font-size:16px;font-weight:600}
+.month-nav{font-size:18px;cursor:pointer;color:var(--text2);border:none;background:none;padding:4px 8px}
+.month-nav:active{color:var(--primary)}
+
+.summary-cards{display:flex;gap:12px;padding:16px;margin:0}
+.summary-card{flex:1;background:var(--card);border-radius:var(--radius);padding:16px;text-align:center}
+.summary-card .sc-label{font-size:12px;color:var(--text2)}
+.summary-card .sc-amount{font-size:20px;font-weight:700;margin-top:6px}
+.summary-card .sc-amount.income{color:var(--income)}
+.summary-card .sc-amount.expense{color:var(--expense)}
+
+.stat-bar-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--card);margin:0 16px 1px}
+.stat-bar-item:first-child{border-radius:var(--radius) var(--radius) 0 0;margin-top:8px}
+.stat-bar-item:last-child{border-radius:0 0 var(--radius) var(--radius);margin-bottom:12px}
+.stat-bar-item .sbi-icon{width:36px;height:36px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.stat-bar-item .sbi-info{flex:1}
+.stat-bar-item .sbi-name{font-size:14px;font-weight:500}
+.stat-bar-item .sbi-bar-wrap{height:6px;border-radius:3px;margin-top:6px;overflow:hidden}
+.stat-bar-item .sbi-bar{height:100%;border-radius:3px;transition:width .6s ease}
+.stat-bar-item .sbi-amount{font-size:14px;font-weight:600;white-space:nowrap}
+
+/* ======== Profile ======== */
+.profile-header{background:linear-gradient(135deg,var(--primary),#059669);padding:40px 20px 30px;text-align:center;color:#fff;margin-bottom:-20px}
+.profile-avatar{width:72px;height:72px;border-radius:36px;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 12px}
+.profile-name{font-size:20px;font-weight:600}
+.profile-phone{font-size:13px;color:rgba(255,255,255,.7);margin-top:4px}
+.profile-stats{display:flex;gap:1px;background:var(--card);margin:28px 16px 0;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.profile-stat{flex:1;text-align:center;padding:16px 8px;background:var(--card)}
+.profile-stat .ps-num{font-size:20px;font-weight:700}
+.profile-stat .ps-label{font-size:12px;color:var(--text3);margin-top:2px}
+
+.menu-list{background:var(--card);margin:12px 16px;border-radius:var(--radius);overflow:hidden}
+.menu-item{display:flex;align-items:center;gap:12px;padding:16px;cursor:pointer;border:none;background:none;width:100%;text-align:left;font-size:15px;color:var(--text)}
+.menu-item:active{background:#f8f8f8}
+.menu-item+.menu-item{border-top:1px solid #f5f5f5}
+.menu-item .mi-icon{font-size:20px}
+.menu-item .mi-arrow{font-size:14px;color:var(--text3);margin-left:auto}
+
+/* ======== Logout Modal ======== */
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.45);z-index:100;justify-content:center;align-items:center}
+.modal-overlay.show{display:flex;animation:fadeIn .2s ease}
+.modal-box{background:var(--card);border-radius:16px;padding:28px 24px 20px;width:300px;text-align:center}
+.modal-title{font-size:17px;font-weight:600;margin-bottom:8px}
+.modal-desc{font-size:14px;color:var(--text2);margin-bottom:24px}
+.modal-actions{display:flex;gap:12px}
+.modal-actions button{flex:1;padding:12px;border-radius:var(--radius);font-size:15px;font-weight:500;cursor:pointer;border:none}
+.modal-actions .modal-cancel{background:#f0f0f0;color:var(--text2)}
+.modal-actions .modal-confirm{background:var(--expense);color:#fff}
+
+/* ======== Settings ======== */
+.settings-group{margin:12px 16px;background:var(--card);border-radius:var(--radius);overflow:hidden}
+.settings-item{display:flex;align-items:center;justify-content:space-between;padding:16px;font-size:15px;border:none;background:none;width:100%;cursor:pointer}
+.settings-item:active{background:#f8f8f8}
+.settings-item+.settings-item{border-top:1px solid #f5f5f5}
+.settings-item .si-left{display:flex;align-items:center;gap:10px}
+.settings-item .si-right{display:flex;align-items:center;gap:8px;color:var(--text3);font-size:14px}
+.logout-btn{display:block;width:calc(100% - 32px);margin:24px 16px;padding:14px;border-radius:var(--radius);border:none;background:var(--card);color:var(--expense);font-size:16px;font-weight:500;cursor:pointer;text-align:center}
+.logout-btn:active{background:#fef2f2}
+
+/* Toggle Switch */
+.toggle{width:44px;height:26px;border-radius:13px;background:#ddd;position:relative;cursor:pointer;transition:background .2s;border:none}
+.toggle.on{background:var(--primary)}
+.toggle::after{content:'';width:22px;height:22px;border-radius:11px;background:#fff;position:absolute;top:2px;left:2px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.toggle.on::after{transform:translateX(18px)}
+
+/* ======== Category Manage ======== */
+.cat-edit-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--card);margin:0 16px 1px}
+.cat-edit-item:first-child{border-radius:var(--radius) var(--radius) 0 0;margin-top:0}
+.cat-edit-item:last-child{border-radius:0 0 var(--radius) var(--radius);margin-bottom:12px}
+.cat-edit-item .cei-icon{width:40px;height:40px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.cat-edit-item .cei-name{flex:1;font-size:15px}
+.cat-edit-item .cei-del{font-size:18px;color:var(--expense);cursor:pointer;border:none;background:none;padding:4px 8px}
+
+/* Misc */
+.divider{height:1px;background:#f0f0f0;margin:0 16px}
+.empty-state{text-align:center;padding:60px 20px;color:var(--text3)}
+.empty-state .empty-icon{font-size:48px;margin-bottom:12px}
+.empty-state .empty-text{font-size:14px}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ==================== AUTH PAGES ==================== -->
+
+<!-- Login -->
+<div class="page auth-page" id="page-login">
+  <div class="auth-body">
+    <div class="auth-logo">
+      <div class="logo-icon">💰</div>
+      <h1>小账本</h1>
+      <p>轻松记账，理清每一笔</p>
+    </div>
+    <div class="auth-box">
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchAuthTab(0)">密码登录</button>
+        <button class="auth-tab" onclick="switchAuthTab(1)">验证码登录</button>
+      </div>
+      <div id="login-password">
+        <div class="input-group">
+          <label class="input-label">手机号</label>
+          <input class="input-field" type="tel" placeholder="请输入手机号" maxlength="11">
+        </div>
+        <div class="input-group">
+          <label class="input-label">密码</label>
+          <input class="input-field" type="password" placeholder="请输入密码">
+        </div>
+        <button class="auth-forgot" onclick="navigateTo('forgot')">忘记密码？</button>
+        <button class="btn-primary" style="margin-top:16px" onclick="handleLogin()">登 录</button>
+      </div>
+      <div id="login-code" style="display:none">
+        <div class="input-group">
+          <label class="input-label">手机号</label>
+          <input class="input-field" type="tel" placeholder="请输入手机号" maxlength="11">
+        </div>
+        <div class="input-group">
+          <label class="input-label">验证码</label>
+          <div style="display:flex;gap:12px">
+            <input class="input-field" type="text" placeholder="请输入验证码" maxlength="6" style="flex:1">
+            <button style="padding:14px 16px;border-radius:var(--radius);border:1px solid var(--primary);background:var(--card);color:var(--primary);font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap" onclick="sendCode(this)">获取验证码</button>
+          </div>
+        </div>
+        <button class="btn-primary" style="margin-top:8px" onclick="handleLogin()">登 录</button>
+      </div>
+      <div class="auth-footer">
+        还没有账号？<a onclick="navigateTo('register')">立即注册</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Register -->
+<div class="page auth-page" id="page-register">
+  <div class="auth-body">
+    <div class="auth-logo">
+      <div class="logo-icon">✍️</div>
+      <h1>注册账号</h1>
+      <p>30秒快速注册，开始记账</p>
+    </div>
+    <div class="auth-box">
+      <div class="input-group">
+        <label class="input-label">手机号</label>
+        <input class="input-field" type="tel" placeholder="请输入手机号" maxlength="11">
+      </div>
+      <div class="input-group">
+        <label class="input-label">验证码</label>
+        <div style="display:flex;gap:12px">
+          <input class="input-field" type="text" placeholder="请输入验证码" maxlength="6" style="flex:1">
+          <button class="btn-outline" style="width:auto;white-space:nowrap;padding:14px 16px;font-size:14px" onclick="sendCode(this)">获取验证码</button>
+        </div>
+      </div>
+      <div class="input-group">
+        <label class="input-label">设置密码</label>
+        <input class="input-field" type="password" placeholder="6-20位字母或数字">
+      </div>
+      <div class="input-group">
+        <label class="input-label">确认密码</label>
+        <input class="input-field" type="password" placeholder="再次输入密码">
+      </div>
+      <button class="btn-primary" onclick="handleLogin()">注 册</button>
+      <div class="auth-footer" style="margin-top:16px">
+        已有账号？<a onclick="navigateTo('login')">返回登录</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Forgot Password -->
+<div class="page auth-page" id="page-forgot">
+  <div class="auth-body">
+    <div class="auth-logo">
+      <div class="logo-icon">🔑</div>
+      <h1>找回密码</h1>
+      <p>验证身份后重置密码</p>
+    </div>
+    <div class="auth-box">
+      <div class="input-group">
+        <label class="input-label">手机号</label>
+        <input class="input-field" type="tel" placeholder="请输入注册手机号" maxlength="11">
+      </div>
+      <div class="input-group">
+        <label class="input-label">验证码</label>
+        <div style="display:flex;gap:12px">
+          <input class="input-field" type="text" placeholder="请输入验证码" maxlength="6" style="flex:1">
+          <button class="btn-outline" style="width:auto;white-space:nowrap;padding:14px 16px;font-size:14px" onclick="sendCode(this)">获取验证码</button>
+        </div>
+      </div>
+      <div class="input-group">
+        <label class="input-label">新密码</label>
+        <input class="input-field" type="password" placeholder="6-20位字母或数字">
+      </div>
+      <button class="btn-primary" onclick="handleLogin()">重置密码</button>
+      <div class="auth-footer" style="margin-top:16px">
+        记起来了？<a onclick="navigateTo('login')">返回登录</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MAIN PAGES ==================== -->
+
+<!-- Home -->
+<div class="page" id="page-home">
+  <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+  <div class="header"><span class="header-title">我的账本</span><span style="font-size:22px;cursor:pointer" onclick="navigateTo('profile')">👤</span></div>
+  <div class="page-content">
+    <div style="padding-top:8px"></div>
+    <div class="balance-card">
+      <div class="balance-label">总资产 (¥)</div>
+      <div class="balance-amount">¥12,468.00</div>
+      <div class="balance-row">
+        <div class="balance-item">
+          <div class="balance-item-label">本月收入</div>
+          <div class="balance-item-amount income">¥4,280.00</div>
+        </div>
+        <div class="balance-item">
+          <div class="balance-item-label">本月支出</div>
+          <div class="balance-item-amount expense">¥1,932.25</div>
+        </div>
+      </div>
+    </div>
+    <div class="quick-actions">
+      <button class="quick-btn" onclick="navigateTo('add')"><span class="q-icon">💰</span>记一笔</button>
+      <button class="quick-btn" onclick="navigateTo('stats')"><span class="q-icon">📊</span>看报表</button>
+    </div>
+    <div class="section-header">
+      <span class="section-title">最近账单</span>
+      <button class="section-more" onclick="navigateTo('transactions')">查看全部 →</button>
+    </div>
+    <div id="home-tx-list"></div>
+  </div>
+  <div class="tab-bar">
+    <button class="tab-item active" onclick="switchTab(0)"><span class="tab-icon">🏠</span>首页</button>
+    <button class="tab-item" onclick="switchTab(1)"><span class="tab-icon">📋</span>账单</button>
+    <button class="tab-add" onclick="navigateTo('add')">+</button>
+    <button class="tab-item" onclick="switchTab(2)"><span class="tab-icon">📊</span>统计</button>
+    <button class="tab-item" onclick="switchTab(3)"><span class="tab-icon">👤</span>我的</button>
+  </div>
+</div>
+
+<!-- Transactions -->
+<div class="page" id="page-transactions">
+  <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+  <div class="header"><span class="header-title">账单</span><span style="font-size:20px;cursor:pointer">🔍</span></div>
+  <div class="page-content">
+    <div class="filter-tabs" id="tx-filter-tabs">
+      <button class="filter-tab active" data-filter="all" onclick="filterTx('all',this)">全部</button>
+      <button class="filter-tab" data-filter="income" onclick="filterTx('income',this)">收入</button>
+      <button class="filter-tab" data-filter="expense" onclick="filterTx('expense',this)">支出</button>
+    </div>
+    <div id="tx-list"></div>
+  </div>
+  <div class="tab-bar">
+    <button class="tab-item" onclick="switchTab(0)"><span class="tab-icon">🏠</span>首页</button>
+    <button class="tab-item active" onclick="switchTab(1)"><span class="tab-icon">📋</span>账单</button>
+    <button class="tab-add" onclick="navigateTo('add')">+</button>
+    <button class="tab-item" onclick="switchTab(2)"><span class="tab-icon">📊</span>统计</button>
+    <button class="tab-item" onclick="switchTab(3)"><span class="tab-icon">👤</span>我的</button>
+  </div>
+</div>
+
+<!-- Add Transaction -->
+<div class="page" id="page-add">
+  <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+  <div class="header">
+    <button class="header-back" onclick="goBack()">✕</button>
+    <span class="header-title">记一笔</span>
+    <button class="header-right" onclick="saveTransaction()">保存</button>
+  </div>
+  <div class="page-content">
+    <div class="add-type-toggle" style="margin-top:12px">
+      <button class="add-type-btn active" id="add-type-inc" onclick="setAddType('income')">💰 收入</button>
+      <button class="add-type-btn" id="add-type-exp" onclick="setAddType('expense')">💳 支出</button>
+    </div>
+    <div class="amount-display" style="margin-top:12px">
+      <div class="label">金额</div>
+      <div class="value" id="add-amount-display">¥0.00</div>
+    </div>
+    <div style="padding:12px 16px 4px">
+      <label class="input-label">分类</label>
+    </div>
+    <div class="category-grid" id="category-grid"></div>
+    <div style="padding:0 16px" id="add-form-extras">
+      <div class="input-group">
+        <label class="input-label">备注</label>
+        <input class="input-field" id="add-note" placeholder="添加备注..." style="border-color:var(--border)">
+      </div>
+    </div>
+    <div style="padding:16px">
+      <button class="btn-primary" onclick="saveTransaction()">保存记录</button>
+    </div>
+  </div>
+</div>
+
+<!-- Transaction Detail -->
+<div class="page" id="page-detail">
+  <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+  <div class="header">
+    <button class="header-back" onclick="goBack()">←</button>
+    <span class="header-title">账单详情</span>
+    <span style="width:32px"></span>
+  </div>
+  <div class="page-content" id="detail-content"></div>
+</div>
+
+<!-- Statistics -->
+<div class="page" id="page-stats">
+  <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+  <div class="header"><span class="header-title">统计</span><span style="font-size:20px;cursor:pointer">📅</span></div>
+  <div class="page-content">
+    <div style="padding-top:8px"></div>
+    <div class="month-selector">
+      <button class="month-nav" onclick="changeMonth(-1)">◀</button>
+      <span class="month-text" id="stats-month">2026年5月</span>
+      <button class="month-nav" onclick="changeMonth(1)">▶</button>
+    </div>
+    <div class="summary-cards">
+      <div class="summary-card"><div class="sc-label">本月收入</div><div class="sc-amount income">¥4,280.00</div></div>
+      <div class="summary-card"><div class="sc-label">本月支出</div><div class="sc-amount expense">¥1,932.25</div></div>
+      <div class="summary-card"><div class="sc-label">结余</div><div class="sc-amount" style="color:var(--text)">¥2,347.75</div></div>
+    </div>
+    <div class="section-header"><span class="section-title">支出分类排行</span></div>
+    <div id="stats-category-list"></div>
+  </div>
+  <div class="tab-bar">
+    <button class="tab-item" onclick="switchTab(0)"><span class="tab-icon">🏠</span>首页</button>
+    <button class="tab-item" onclick="switchTab(1)"><span class="tab-icon">📋</span>账单</button>
+    <button class="tab-add" onclick="navigateTo('add')">+</button>
+    <button class="tab-item active" onclick="switchTab(2)"><span class="tab-icon">📊</span>统计</button>
+    <button class="tab-item" onclick="switchTab(3)"><span class="tab-icon">👤</span>我的</button>
+  </div>
+</div>
+
+<!-- Profile -->
+<div class="page" id="page-profile">
+  <div class="header">
+    <button class="header-back" onclick="goBack()">←</button>
+    <span class="header-title">个人中心</span>
+    <span style="width:32px"></span>
+  </div>
+  <div class="page-content">
+    <div class="profile-header">
+      <div class="profile-avatar">😊</div>
+      <div class="profile-name">小明</div>
+      <div class="profile-phone">138****8888</div>
+    </div>
+    <div class="profile-stats">
+      <div class="profile-stat"><div class="ps-num">128</div><div class="ps-label">总账单</div></div>
+      <div class="profile-stat"><div class="ps-num" style="color:var(--income)">¥28,460</div><div class="ps-label">总收入</div></div>
+      <div class="profile-stat"><div class="ps-num" style="color:var(--expense)">¥16,234</div><div class="ps-label">总支出</div></div>
+    </div>
+    <div class="menu-list">
+      <button class="menu-item" onclick="navigateTo('transactions')"><span class="mi-icon">📋</span>我的账单<span class="mi-arrow">›</span></button>
+      <button class="menu-item" onclick="navigateTo('stats')"><span class="mi-icon">📊</span>我的统计<span class="mi-arrow">›</span></button>
+      <button class="menu-item" onclick="navigateTo('categories')"><span class="mi-icon">🏷️</span>分类管理<span class="mi-arrow">›</span></button>
+      <button class="menu-item" onclick="navigateTo('settings')"><span class="mi-icon">⚙️</span>设置<span class="mi-arrow">›</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- Settings -->
+<div class="page" id="page-settings">
+  <div class="header">
+    <button class="header-back" onclick="goBack()">←</button>
+    <span class="header-title">设置</span>
+    <span style="width:32px"></span>
+  </div>
+  <div class="page-content">
+    <div style="padding-top:12px"></div>
+    <div class="settings-group">
+      <div class="settings-item"><div class="si-left"><span class="mi-icon">🔒</span>账户安全</div><div class="si-right"><span>已开启</span><span style="font-size:14px;color:var(--text3)">›</span></div></div>
+      <div class="settings-item"><div class="si-left"><span class="mi-icon">🔔</span>消息通知</div><button class="toggle on" onclick="this.classList.toggle('on')"></button></div>
+      <div class="settings-item"><div class="si-left"><span class="mi-icon">💰</span>默认货币</div><div class="si-right"><span>人民币 (¥)</span><span style="font-size:14px;color:var(--text3)">›</span></div></div>
+      <div class="settings-item"><div class="si-left"><span class="mi-icon">🌙</span>深色模式</div><button class="toggle" onclick="this.classList.toggle('on')"></button></div>
+    </div>
+    <div class="settings-group">
+      <div class="settings-item"><div class="si-left"><span class="mi-icon">📤</span>导出数据</div><div class="si-right"><span style="font-size:14px;color:var(--text3)">›</span></div></div>
+      <div class="settings-item"><div class="si-left"><span class="mi-icon">🔄</span>数据同步</div><div class="si-right"><span>已同步</span><span style="font-size:14px;color:var(--text3)">›</span></div></div>
+      <div class="settings-item"><div class="si-left"><span class="mi-icon">ℹ️</span>关于小账本</div><div class="si-right"><span>v1.0.0</span><span style="font-size:14px;color:var(--text3)">›</span></div></div>
+    </div>
+    <button class="logout-btn" onclick="showLogoutModal()">退出登录</button>
+  </div>
+</div>
+
+<!-- Category Management -->
+<div class="page" id="page-categories">
+  <div class="header">
+    <button class="header-back" onclick="goBack()">←</button>
+    <span class="header-title">分类管理</span>
+    <button class="header-right">+ 添加</button>
+  </div>
+  <div class="page-content">
+    <div style="padding:12px 16px 4px"><span class="input-label" style="font-size:14px">支出分类</span></div>
+    <div id="category-edit-list"></div>
+  </div>
+</div>
+
+<!-- ==================== LOGOUT MODAL ==================== -->
+<div class="modal-overlay" id="logout-modal">
+  <div class="modal-box">
+    <div class="modal-title">确认退出</div>
+    <div class="modal-desc">退出后将返回登录页面，确定要退出吗？</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="hideLogoutModal()">取消</button>
+      <button class="modal-confirm" onclick="handleLogout()">退出</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script>
+// ==================== DATA ====================
+const txData = [
+  {id:1,type:'expense',cat:'日用',icon:'🛒',name:'超市购物',amount:82.50,date:'2026-05-14',note:'沃尔玛采购'},
+  {id:2,type:'income',cat:'薪资',icon:'💰',name:'工资到账',amount:4280.00,date:'2026-05-13',note:'5月工资'},
+  {id:3,type:'expense',cat:'餐饮',icon:'☕',name:'星巴克咖啡',amount:35.00,date:'2026-05-12',note:''},
+  {id:4,type:'income',cat:'自由职业',icon:'💻',name:'兼职项目',amount:850.00,date:'2026-05-12',note:'UI设计项目尾款'},
+  {id:5,type:'expense',cat:'餐饮',icon:'🍕',name:'外卖订单',amount:42.00,date:'2026-05-11',note:'晚餐'},
+  {id:6,type:'expense',cat:'交通',icon:'🚗',name:'打车费用',amount:28.00,date:'2026-05-11',note:'去客户公司'},
+  {id:7,type:'expense',cat:'日用',icon:'🛒',name:'日用品',amount:128.00,date:'2026-05-10',note:'超市'},
+  {id:8,type:'expense',cat:'娱乐',icon:'🎮',name:'Steam游戏',amount:175.00,date:'2026-05-09',note:'新游戏折扣'},
+  {id:9,type:'expense',cat:'服饰',icon:'👕',name:'买衣服',amount:98.00,date:'2026-05-08',note:'优衣库'},
+  {id:10,type:'expense',cat:'交通',icon:'🚇',name:'地铁充值',amount:50.00,date:'2026-05-07',note:''},
+  {id:11,type:'expense',cat:'餐饮',icon:'🍜',name:'午餐',amount:32.00,date:'2026-05-07',note:'公司食堂'},
+  {id:12,type:'expense',cat:'日用',icon:'🧴',name:'护肤品',amount:213.00,date:'2026-05-06',note:'屈臣氏'},
+];
+
+const categories = {
+  expense: [
+    {name:'餐饮',icon:'🍕',color:'#FEF3C7'},
+    {name:'日用',icon:'🛒',color:'#DBEAFE'},
+    {name:'交通',icon:'🚗',color:'#E0E7FF'},
+    {name:'娱乐',icon:'🎮',color:'#FCE7F3'},
+    {name:'服饰',icon:'👕',color:'#FEF3C7'},
+    {name:'住房',icon:'🏠',color:'#E0F2FE'},
+    {name:'医疗',icon:'🏥',color:'#FEE2E2'},
+    {name:'教育',icon:'📚',color:'#F3E8FF'},
+    {name:'通讯',icon:'📱',color:'#E0F2FE'},
+    {name:'其他',icon:'📦',color:'#F1F5F9'},
+  ],
+  income: [
+    {name:'薪资',icon:'💰',color:'#D1FAE5'},
+    {name:'自由职业',icon:'💻',color:'#DBEAFE'},
+    {name:'投资',icon:'📈',color:'#E0E7FF'},
+    {name:'兼职',icon:'📝',color:'#FEF3C7'},
+    {name:'红包',icon:'🧧',color:'#FCE7F3'},
+    {name:'其他',icon:'📦',color:'#F1F5F9'},
+  ]
+};
+
+// ==================== STATE ====================
+let addType = 'income';
+let currentFilter = 'all';
+let currentMonth = new Date(2026, 4);
+let selectedCat = null;
+let pageStack = ['home'];
+
+// ==================== ROUTING ====================
+function navigateTo(page) {
+  pageStack.push(page);
+  showPage(page);
+}
+
+function goBack() {
+  if (pageStack.length > 1) pageStack.pop();
+  showPage(pageStack[pageStack.length-1], true);
+}
+
+function showPage(page, back=false) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const el = document.getElementById('page-'+page);
+  if (el) {
+    el.classList.add('active');
+    if (!back) el.style.animation = 'none';
+    setTimeout(() => el.style.animation = '', 10);
+  }
+  if (['home','transactions','stats','profile'].includes(page)) {
+    pageStack = [page];
+    updateTabBar(page);
+  }
+  if (page === 'home') renderHomeTx();
+  if (page === 'transactions') renderTxList();
+  if (page === 'add') renderCategories();
+  if (page === 'detail') renderDetail();
+  if (page === 'stats') renderStats();
+  if (page === 'categories') renderCategoryEdit();
+}
+
+function updateTabBar(page) {
+  const map = {home:0, transactions:1, stats:2, profile:3};
+  const idx = map[page];
+  document.querySelectorAll('.tab-item').forEach((t,i) => {
+    t.classList.toggle('active', i === idx);
+  });
+}
+
+// ==================== AUTH ====================
+function switchAuthTab(idx) {
+  document.querySelectorAll('.auth-tab').forEach((t,i) => t.classList.toggle('active', i===idx));
+  document.getElementById('login-password').style.display = idx === 0 ? 'block' : 'none';
+  document.getElementById('login-code').style.display = idx === 1 ? 'block' : 'none';
+}
+
+let codeTimers = {};
+function sendCode(btn) {
+  let sec = 60;
+  btn.disabled = true;
+  btn.style.opacity = '.5';
+  btn.textContent = sec + 's';
+  const timer = setInterval(() => {
+    sec--;
+    btn.textContent = sec + 's';
+    if (sec <= 0) {
+      clearInterval(timer);
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.textContent = '获取验证码';
+    }
+  }, 1000);
+}
+
+function handleLogin() {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  pageStack = ['home'];
+  document.getElementById('page-home').classList.add('active');
+  updateTabBar('home');
+  renderHomeTx();
+}
+
+function handleLogout() {
+  hideLogoutModal();
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  pageStack = ['login'];
+  document.getElementById('page-login').classList.add('active');
+}
+
+function showLogoutModal() {
+  document.getElementById('logout-modal').classList.add('show');
+}
+
+function hideLogoutModal() {
+  document.getElementById('logout-modal').classList.remove('show');
+}
+
+// ==================== HOME ====================
+function renderHomeTx() {
+  const container = document.getElementById('home-tx-list');
+  const recent = [...txData].sort((a,b) => b.id - a.id).slice(0, 5);
+  container.innerHTML = recent.map(t => renderTxItem(t)).join('');
+}
+
+// ==================== TRANSACTIONS ====================
+function filterTx(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderTxList();
+}
+
+function renderTxList() {
+  const container = document.getElementById('tx-list');
+  let filtered = currentFilter === 'all' ? txData : txData.filter(t => t.type === currentFilter);
+  filtered = [...filtered].sort((a,b) => new Date(b.date) - new Date(a.date));
+
+  const groups = {};
+  filtered.forEach(t => {
+    const label = formatDateGroup(t.date);
+    if (!groups[label]) groups[label] = [];
+    groups[label].push(t);
+  });
+
+  let html = '';
+  Object.entries(groups).forEach(([label, items]) => {
+    html += `<div class="date-header">${label}</div>`;
+    items.forEach(t => { html += renderTxItem(t); });
+  });
+  container.innerHTML = html || '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">暂无记录</div></div>';
+}
+
+function renderTxItem(t) {
+  return `<div class="tx-item" onclick="viewDetail(${t.id})">
+    <div class="tx-icon" style="background:${t.type==='income'?'#D1FAE5':'#FEF3C7'}">${t.icon}</div>
+    <div class="tx-info"><div class="tx-name">${t.name}</div><div class="tx-cat">${t.cat}</div></div>
+    <div class="tx-amount ${t.type}">${t.type==='income'?'+':'-'}¥${t.amount.toFixed(2)}</div>
+  </div>`;
+}
+
+function formatDateGroup(dateStr) {
+  const d = new Date(dateStr);
+  const today = new Date(2026,4,14);
+  const yesterday = new Date(2026,4,13);
+  if (dateStr === '2026-05-14') return '今天';
+  if (dateStr === '2026-05-13') return '昨天';
+  return `${d.getMonth()+1}月${d.getDate()}日`;
+}
+
+// ==================== ADD TRANSACTION ====================
+function setAddType(type) {
+  addType = type;
+  selectedCat = null;
+  document.getElementById('add-type-inc').className = 'add-type-btn' + (type==='income'?' active':'');
+  document.getElementById('add-type-exp').className = 'add-type-btn' + (type==='expense'?' active':'');
+  renderCategories();
+}
+
+function renderCategories() {
+  const grid = document.getElementById('category-grid');
+  const cats = categories[addType] || [];
+  grid.innerHTML = cats.map(c => `
+    <button class="cat-item" data-cat="${c.name}" onclick="selectCat('${c.name}',this)">
+      <div class="cat-icon" style="background:${c.color}">${c.icon}</div>
+      <div class="cat-name">${c.name}</div>
+    </button>
+  `).join('');
+}
+
+function selectCat(name, btn) {
+  selectedCat = name;
+  document.querySelectorAll('.cat-item').forEach(c => c.style.background = '');
+  if (btn) btn.style.background = '#D1FAE5';
+}
+
+function saveTransaction() {
+  const note = document.getElementById('add-note').value || '无备注';
+  const cat = selectedCat || '其他';
+  if (!selectedCat) {
+    document.querySelectorAll('.cat-item')[0].style.background = '#D1FAE5';
+    selectedCat = document.querySelector('.cat-item')?.dataset?.cat || '其他';
+  }
+  // In real app would save - for demo just go back
+  goBack();
+}
+
+// ==================== DETAIL ====================
+function viewDetail(id) {
+  window._detailId = id;
+  navigateTo('detail');
+}
+
+function renderDetail() {
+  const id = window._detailId;
+  const tx = txData.find(t => t.id === id);
+  if (!tx) return;
+  const container = document.getElementById('detail-content');
+  container.innerHTML = `
+    <div style="padding-top:8px"></div>
+    <div class="detail-card">
+      <div class="d-icon" style="background:${tx.type==='income'?'#D1FAE5':'#FEF3C7'}">${tx.icon}</div>
+      <div class="d-amount" style="color:${tx.type==='income'?'var(--income)':'var(--expense)'}">${tx.type==='income'?'+':'-'}¥${tx.amount.toFixed(2)}</div>
+      <div class="d-name">${tx.name}</div>
+      <div class="d-cat">${tx.cat}</div>
+    </div>
+    <div class="detail-info">
+      <div class="detail-row"><span class="label">类型</span><span class="value">${tx.type==='income'?'收入':'支出'}</span></div>
+      <div class="detail-row"><span class="label">分类</span><span class="value">${tx.cat}</span></div>
+      <div class="detail-row"><span class="label">日期</span><span class="value">${tx.date}</span></div>
+      <div class="detail-row"><span class="label">备注</span><span class="value">${tx.note || '无'}</span></div>
+    </div>
+    <div class="detail-actions">
+      <button class="btn-del" onclick="goBack()">删除</button>
+      <button class="btn-edit" onclick="goBack()">编辑</button>
+    </div>
+  `;
+}
+
+// ==================== STATISTICS ====================
+function changeMonth(delta) {
+  currentMonth.setMonth(currentMonth.getMonth() + delta);
+  document.getElementById('stats-month').textContent =
+    currentMonth.getFullYear() + '年' + (currentMonth.getMonth()+1) + '月';
+  renderStats();
+}
+
+function renderStats() {
+  const container = document.getElementById('stats-category-list');
+  const expenses = txData.filter(t => t.type === 'expense');
+  const catTotals = {};
+  expenses.forEach(t => {
+    catTotals[t.cat] = (catTotals[t.cat] || 0) + t.amount;
+  });
+  const sorted = Object.entries(catTotals).sort((a,b) => b[1] - a[1]);
+  const max = sorted.length ? sorted[0][1] : 1;
+
+  const colors = ['#F59E0B','#3B82F6','#6366F1','#EC4899','#EF4444','#8B5CF6','#06B6D4','#84CC16'];
+  const icons = ['🍕','🛒','🚗','🎮','👕','🏠','🏥','📚'];
+
+  container.innerHTML = sorted.map(([cat, total], i) => `
+    <div class="stat-bar-item">
+      <div class="sbi-icon" style="background:${colors[i%colors.length]}22;color:${colors[i%colors.length]}">${icons[i%icons.length]}</div>
+      <div class="sbi-info">
+        <div class="sbi-name">${cat}</div>
+        <div class="sbi-bar-wrap" style="background:${colors[i%colors.length]}22">
+          <div class="sbi-bar" style="width:${(total/max*100).toFixed(0)}%;background:${colors[i%colors.length]}"></div>
+        </div>
+      </div>
+      <div class="sbi-amount">¥${total.toFixed(2)}</div>
+    </div>
+  `).join('');
+}
+
+// ==================== CATEGORY EDIT ====================
+function renderCategoryEdit() {
+  const container = document.getElementById('category-edit-list');
+  const cats = categories.expense;
+  container.innerHTML = cats.map(c => `
+    <div class="cat-edit-item">
+      <div class="cei-icon" style="background:${c.color}">${c.icon}</div>
+      <div class="cei-name">${c.name}</div>
+      <button class="cei-del" onclick="this.parentElement.remove()">✕</button>
+    </div>
+  `).join('');
+}
+
+// ==================== TAB SWITCHING ====================
+function switchTab(idx) {
+  const pages = ['home','transactions','stats','profile'];
+  pageStack = [pages[idx]];
+  showPage(pages[idx]);
+}
+
+// ==================== INIT ====================
+document.getElementById('page-login').classList.add('active');
+</script>
+</body>
+</html>
