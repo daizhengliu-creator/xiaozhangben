@@ -671,6 +671,13 @@ function sendCode(btn) {
 }
 
 function handleLogin() {
+  // Test account: 13888888888 / 123456
+  const phone = document.querySelector('#login-password .input-field')?.value || '';
+  const pwd = document.querySelector('#login-password .input-field:nth-of-type(2)')?.value || '';
+  if (phone && pwd && (phone !== '13888888888' || pwd !== '123456')) {
+    alert('账号或密码错误！\n\n测试账号：13888888888\n密  码：123456');
+    return;
+  }
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   pageStack = ['home'];
   document.getElementById('page-home').classList.add('active');
